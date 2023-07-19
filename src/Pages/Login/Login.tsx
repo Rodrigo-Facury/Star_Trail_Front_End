@@ -1,29 +1,59 @@
 import "./Login.css"
 import logo from "../../assets/logo.png"
-import { FormControl, FormHelperText, Input } from "@chakra-ui/react"
-import PasswordInput from "../../Components/PasswordInput"
+import LoginForm from "../../Components/LoginForm"
+import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react"
+import SignUpForm from "../../Components/SignUpForm"
 
 function Login() {
   return (
     <main id="login-page">
       <h1 id="title">Star Trail</h1>
       <h2 id="welcome">Entre e trace seu caminho!</h2>
-      <img src={logo} alt="Logo da Star Trail" />
-      <FormControl>
-        <Input
-          type="email"
-          placeholder="E-mail"
-          borderColor="#4461F2"
-          color="white"
-          _placeholder={{
-            opacity: 1,
+      <img width={350} src={logo} alt="Logo da Star Trail" />
+      <Tabs
+        align="end"
+      >
+        <TabList
+          sx={{
             color: "white",
-            fontFamily: "Abhaya Libre, serif"
+            borderBottom: "none",
+            fontFamily: "Abhaya Libre, serif",
+            position: "absolute",
+            top: "25px"
           }}
-        />
-        <PasswordInput />
-        <FormHelperText color={"white"} fontFamily="Abhaya Libre, serif">Esqueceu a senha?</FormHelperText>
-      </FormControl>
+        >
+          <Tab
+            sx={{
+              color: "white",
+              borderBottomColor: "transparent",
+            }}
+            _selected={{
+              borderBottomColor: "#9FAFFF"
+            }}
+          >
+            Entrar
+          </Tab>
+          <Tab
+            sx={{
+              color: "white",
+              borderBottomColor: "transparent",
+            }}
+            _selected={{
+              borderBottomColor: "#9FAFFF"
+            }}
+          >
+            Cadastrar
+          </Tab>
+        </TabList>
+        <TabPanels>
+          <TabPanel>
+            <LoginForm />
+          </TabPanel>
+          <TabPanel>
+            <SignUpForm />
+          </TabPanel>
+        </TabPanels>
+      </Tabs>
     </main>
   )
 }

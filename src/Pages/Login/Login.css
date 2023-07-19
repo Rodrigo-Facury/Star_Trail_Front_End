@@ -4,15 +4,24 @@
   background-image: url("../../assets/backgroundLogin.png");
   margin: 0px;
   background-size: cover;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
 }
 
 #welcome {
   color: white;
   font-family: 'Barlow', sans-serif;
+  font-size: 40px;
+  width: 300px;
 }
 
 #title {
   color: white;
   font-family: 'Alfa Slab One', cursive;
   font-weight: 400;
+  position: absolute;
+  top: 25px;
+  left: 25px;
+  font-size: 25px;
 }
