@@ -1,54 +1,104 @@
 import {
-  // Avatar,
-  // Box,
+  Alert,
+  AlertIcon,
   Button,
-  // Flex,
   FormControl,
   FormHelperText,
-  Input,
-  // Text,
-  // Wrap,
-  // WrapItem
-} from "@chakra-ui/react"
-import { useNavigate } from "react-router-dom"
-import PasswordInput from "./PasswordInput"
-// import facebookLogo from "../assets/facebook-logo.png"
-// import googleLogo from "../assets/google-logo.png"
+  Input
+} from '@chakra-ui/react'
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import PasswordInput from './PasswordInput'
+import secureLocalStorage from 'react-secure-storage'
 
+interface LoginInfo {
+  emailOrUsername: string
+  password: string
+}
 
 function LoginForm() {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
+  const [loginInfo, setLoginInfo] = useState<LoginInfo>({
+    emailOrUsername: '',
+    password: ''
+  })
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target
+    setLoginInfo((prevInfo) => ({
+      ...prevInfo,
+      [name]: value
+    }))
+  }
+
+  const handleSubmit = () => {
+    fetch('http://localhost:3001/user/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(loginInfo)
+    })
+      .then(async (res) => {
+        if (res.ok) {
+          return res.json()
+        } else {
+          return res.json().then((data: { message: string }) => {
+            setErrorMessage(data.message)
+            setTimeout(() => {
+              setErrorMessage(null)
+            }, 2000)
+            throw new Error(data.message)
+          })
+        }
+      })
+      .then((data: { token: string }) => {
+        secureLocalStorage.setItem('st_token', data.token)
+        navigate('/')
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }
   return (
     <FormControl
       sx={{
-        width: "300px",
-        display: "flex",
-        flexDirection: "column",
-        alignSelf: "center"
+        width: '300px',
+        display: 'flex',
+        flexDirection: 'column',
+        alignSelf: 'center'
       }}
     >
       <Input
-        type="email"
-        placeholder="E-mail"
-        borderColor="#4461F2"
-        color="white"
+        type='text'
+        name='emailOrUsername'
+        value={loginInfo.emailOrUsername}
+        placeholder='E-mail ou Username'
+        borderColor='#4461F2'
+        color='white'
         _placeholder={{
           opacity: 1,
-          color: "white",
-          fontFamily: "Abhaya Libre, serif"
+          color: 'white',
+          fontFamily: 'Abhaya Libre, serif'
         }}
         sx={{
-          marginBottom: "15px"
+          marginBottom: '15px'
         }}
+        onChange={handleChange}
       />
-      <PasswordInput placeholder="Senha" />
+      <PasswordInput
+      value={loginInfo.password}
+        placeholder='Senha'
+        name='password'
+        onChange={handleChange}
+      />
       <FormHelperText
-        onClick={() => navigate("/recover-password")}
-        color={"white"}
-        fontFamily="Abhaya Libre, serif"
+        onClick={() => navigate('/recover-password')}
+        color={'white'}
+        fontFamily='Abhaya Libre, serif'
         sx={{
-          alignSelf: "flex-end",
+          alignSelf: 'flex-end',
           cursor: 'pointer'
         }}
       >
@@ -56,51 +106,21 @@ function LoginForm() {
       </FormHelperText>
       <Button
         sx={{
-          backgroundColor: "#4461F2",
-          color: "white",
-          fontFamily: "Abhaya Libre, serif",
+          backgroundColor: '#4461F2',
+          color: 'white',
+          fontFamily: 'Abhaya Libre, serif',
           marginTop: '25px'
         }}
+        onClick={handleSubmit}
       >
         Entrar
       </Button>
-
-      {/* <Flex alignItems="center" marginTop="30px" justifyContent="center" width="100%">
-        <Box
-          sx={{
-            backgroundColor: "#DFDFDF",
-            width: "50px",
-            height: "1px",
-          }}
-          flex="1"
-        ></Box>
-        <Text
-          sx={{
-            color: "white",
-            fontFamily: "Abhaya Libre, serif",
-            fontSize: "15px",
-            margin: "0px 20px"
-          }}
-        >
-          Ou continue com
-        </Text>
-        <Box
-          sx={{
-            backgroundColor: "#DFDFDF",
-            width: "50px",
-            height: "1px",
-          }}
-          flex="1"
-        ></Box>
-      </Flex>
-      <Wrap display="flex" justifyContent="center" alignItems="center" marginTop="25px">
-        <WrapItem display="flex" alignItems="center">
-          <Avatar boxSize="42px" name="Entrar com Facebook" src={facebookLogo} />
-        </WrapItem>
-        <WrapItem>
-          <Avatar marginLeft="50px" boxSize="35px" name="Entrar com Google" src={googleLogo} />
-        </WrapItem>
-      </Wrap> */}
+      {errorMessage && (
+        <Alert status='error' position='absolute' bottom='0px' fontSize='13.5px' width='max-content'>
+          <AlertIcon />
+          {errorMessage}
+        </Alert>
+      )}
     </FormControl>
   )
 }
