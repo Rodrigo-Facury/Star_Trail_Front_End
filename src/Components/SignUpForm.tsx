@@ -104,6 +104,12 @@ function SignUpForm() {
       })
   }
 
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleSubmit()
+    }
+  }
+
   return (
     <FormControl
       sx={{
@@ -117,6 +123,7 @@ function SignUpForm() {
         name='firstName'
         value={userInfo.firstName}
         onChange={handleChange}
+        onKeyUp={handleKeyPress}
         placeholder='Nome'
         borderColor='#4461F2'
         color='white'
@@ -134,6 +141,7 @@ function SignUpForm() {
         name='lastName'
         value={userInfo.lastName}
         onChange={handleChange}
+        onKeyUp={handleKeyPress}
         placeholder='Sobrenome'
         borderColor='#4461F2'
         color='white'
@@ -151,6 +159,7 @@ function SignUpForm() {
         name='username'
         value={userInfo.username}
         onChange={handleChange}
+        onKeyUp={handleKeyPress}
         placeholder='Username'
         borderColor='#4461F2'
         title={
@@ -175,6 +184,7 @@ function SignUpForm() {
         name='email'
         value={userInfo.email}
         onChange={handleChange}
+        onKeyUp={handleKeyPress}
         placeholder='E-mail'
         borderColor='#4461F2'
         color='white'
@@ -199,6 +209,7 @@ function SignUpForm() {
 `}
         value={userInfo.password}
         onChange={handleChange}
+        onKeyUp={handleKeyPress}
         sx={{ marginBottom: '15px' }}
       />
       <FormControl isInvalid={!passwordsMatch}>
@@ -214,6 +225,7 @@ function SignUpForm() {
 `}
           value={userInfo.confirmPassword}
           onChange={handleChange}
+          onKeyUp={handleKeyPress}
         />
         {!passwordsMatch && (
           <FormErrorMessage color='red.500'>

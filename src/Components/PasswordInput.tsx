@@ -1,6 +1,6 @@
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
 import { Input, InputGroup, InputRightElement } from '@chakra-ui/react'
-import { ChangeEventHandler, useState } from 'react'
+import { ChangeEventHandler, KeyboardEventHandler, useState } from 'react'
 
 interface PasswordInputProps {
   placeholder: string,
@@ -8,10 +8,11 @@ interface PasswordInputProps {
   name: string,
   value?: string,
   title?: string,
-  onChange: ChangeEventHandler<HTMLInputElement> | undefined
+  onChange: ChangeEventHandler<HTMLInputElement> | undefined,
+  onKeyUp: KeyboardEventHandler<HTMLInputElement>
 }
 
-function PasswordInput({ onChange, name, placeholder, sx, value, title }: PasswordInputProps) {
+function PasswordInput({ onKeyUp, onChange, name, placeholder, sx, value, title }: PasswordInputProps) {
   const [show, setShow] = useState(false)
   const handleClick = () => setShow(!show)
 
@@ -19,6 +20,7 @@ function PasswordInput({ onChange, name, placeholder, sx, value, title }: Passwo
     <InputGroup size='md'>
       <Input
         onChange={onChange}
+        onKeyUp={onKeyUp}
         name={name}
         value={value}
         title={title}

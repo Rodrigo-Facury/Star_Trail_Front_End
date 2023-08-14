@@ -24,14 +24,6 @@ function LoginForm() {
   })
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target
-    setLoginInfo((prevInfo) => ({
-      ...prevInfo,
-      [name]: value
-    }))
-  }
-
   const handleSubmit = () => {
     fetch('http://localhost:3001/user/login', {
       method: 'POST',
@@ -61,6 +53,21 @@ function LoginForm() {
         console.log(err)
       })
   }
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target
+    setLoginInfo((prevInfo) => ({
+      ...prevInfo,
+      [name]: value
+    }))
+  }
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleSubmit()
+    }
+  }
+
   return (
     <FormControl
       sx={{
@@ -86,12 +93,14 @@ function LoginForm() {
           marginBottom: '15px'
         }}
         onChange={handleChange}
+        onKeyUp={handleKeyPress}
       />
       <PasswordInput
-      value={loginInfo.password}
+        value={loginInfo.password}
         placeholder='Senha'
         name='password'
         onChange={handleChange}
+        onKeyUp={handleKeyPress}
       />
       <FormHelperText
         onClick={() => navigate('/recover-password')}
