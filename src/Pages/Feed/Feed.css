@@ -1,5 +1,5 @@
 #feed-page {
   min-height: 100vh;
-  min-width: 100vw;
+  width: 100%;
   background-color: #1E1E1E;
 }

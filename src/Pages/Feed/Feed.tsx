@@ -2,23 +2,31 @@ import './Feed.css'
 import { Box, Center, Container, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react'
 import TrailCard from '../../Components/TrailCard'
 import StarTrailHeader from '../../Components/StarTrailHeader'
+import { FeedResponse, Trail } from '../../../types'
+import { useEffect, useState } from 'react'
 
 function Feed() {
-  const trails = [
-    { id: 1, title: 'Trilha 1', creator: { id: 1, firstName: 'Primeiro', lastName: 'Usuário', username: 'usuario1', profilePicturePath: null, level: 0 }, stars: 10 },
-    { id: 2, title: 'Trilha 2', creator: { id: 2, firstName: 'Segundo', lastName: 'Usuário', username: 'usuario2', profilePicturePath: null, level: 0 }, stars: 15 },
-  ]
+  const [trails, setTrails] = useState<Trail[]>([])
+  const [orderBy, setOrderBy] = useState<string>('createdAt')
+
+  useEffect(() => {
+    console.log('oi')
+    fetch(`http://localhost:3001/trail?orderBy=${orderBy}`)
+      .then((res) => res.json())
+      .then(({ trails }: FeedResponse) => setTrails(trails))
+      .catch((err) => console.error(err))
+  }, [orderBy])
 
   return (
     <main id='feed-page'>
       <StarTrailHeader />
-      <Container>
-        <Tabs align='end'>
+      <Container minWidth='60vw'>
+        <Tabs align='start'>
           <TabList
             sx={{
               color: 'white',
               borderBottom: 'none',
-              fontFamily: 'Abhaya Libre, serif',
+              fontFamily: 'Barlow, sans-serif',
               marginTop: '25px'
             }}
           >
@@ -30,6 +38,7 @@ function Feed() {
               _selected={{
                 borderBottomColor: '#9FAFFF'
               }}
+              onClick={() => setOrderBy('createdAt')}
             >
               Mais Recentes
             </Tab>
@@ -41,6 +50,7 @@ function Feed() {
               _selected={{
                 borderBottomColor: '#9FAFFF'
               }}
+              onClick={() => setOrderBy('starsCount')}
             >
               Mais Populares
             </Tab>
@@ -54,14 +64,27 @@ function Feed() {
                       key={trail.id}
                       title={trail.title}
                       creator={trail.creator}
-                      stars={trail.stars}
+                      stars={trail.starsCount}
+                      steps={trail.steps}
                     />
                   ))}
                 </Box>
               </Center>
             </TabPanel>
             <TabPanel>
-              {/* Exiba aqui as trilhas mais populares */}
+              <Center>
+                <Box mt={6} w='100%'>
+                  {trails.map((trail) => (
+                    <TrailCard
+                      key={trail.id}
+                      title={trail.title}
+                      creator={trail.creator}
+                      stars={trail.starsCount}
+                      steps={trail.steps}
+                    />
+                  ))}
+                </Box>
+              </Center>
             </TabPanel>
           </TabPanels>
         </Tabs>

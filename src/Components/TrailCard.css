@@ -1,0 +1,12 @@
+#star {
+  max-height: 18px;
+}
+
+#stars-container:hover {
+  background-color: rgba(0, 128, 128, 0.28);
+}
+
+.marked-stars-container {
+  background-color: rgba(0, 128, 128, 0.28);
+  border: solid 1px teal;
+}

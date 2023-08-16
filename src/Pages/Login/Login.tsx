@@ -8,7 +8,7 @@ function Login() {
   return (
     <main id="login-page">
       <h1 id="title">Star Trail</h1>
-      <h2 id="welcome">Entre e trace seu caminho!</h2>
+      <h2 id="welcome">Entre e trilhe seu caminho!</h2>
       <img width={350} src={logo} alt="Logo da Star Trail" />
       <Tabs
         align="end"
