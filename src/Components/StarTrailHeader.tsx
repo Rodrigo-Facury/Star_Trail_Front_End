@@ -29,8 +29,8 @@ function StarTrailHeader() {
   }
 
   return (
-    <header className="star-trail-header">
-      <div className="star-trail-logo" onClick={() => navigate('/')}>
+    <header className='star-trail-header'>
+      <div className='star-trail-logo' onClick={() => navigate('/')}>
         <h1>Star Trail</h1>
       </div>
       <Container margin='0px' width='fit-content'>
@@ -47,10 +47,10 @@ function StarTrailHeader() {
           user
             ?
             <Menu>
-              <MenuButton as={Button} colorScheme="teal" variant="outline" padding='20px 15px'>
+              <MenuButton as={Button} colorScheme='teal' variant='outline' padding='20px 15px'>
                 <div id='menu-title'>
-                  <div className="user-avatar">
-                    <img src={user?.profilePicturePath || 'https://random.imagecdn.app/40/40'} alt="Avatar do Usuário" />
+                  <div className='user-avatar'>
+                    <img src={user?.profilePicturePath} alt='Avatar do Usuário' />
                   </div>
                   <h2>{user?.username} {statusIcons[user?.level]}</h2>
                 </div>
@@ -63,11 +63,9 @@ function StarTrailHeader() {
               </MenuList>
             </Menu>
             :
-            <div>
-              <Button colorScheme="teal" variant="outline" padding='15px' onClick={() => navigate('/login')}>
-                Login ou Cadastro
-              </Button>
-            </div>
+            <Button colorScheme='teal' variant='outline' padding='15px' onClick={() => navigate('/login')}>
+              Login ou Cadastro
+            </Button>
         }
       </Container>
     </header>

@@ -10,7 +10,6 @@ function Feed() {
   const [orderBy, setOrderBy] = useState<string>('createdAt')
 
   useEffect(() => {
-    console.log('oi')
     fetch(`http://localhost:3001/trail?orderBy=${orderBy}`)
       .then((res) => res.json())
       .then(({ trails }: FeedResponse) => setTrails(trails))

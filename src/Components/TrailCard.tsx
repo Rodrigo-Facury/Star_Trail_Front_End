@@ -36,7 +36,7 @@ function TrailCard({ title, creator, stars, steps }: TrailCardProps) {
     >
       <Flex align='center' marginBottom='15px'>
         <Image
-          src={creator.profilePicturePath || 'https://random.imagecdn.app/40/40'}
+          src={creator.profilePicturePath}
           alt={`${creator.username}'s Profile Picture`}
           boxSize='40px'
           borderRadius='full'
@@ -54,8 +54,6 @@ function TrailCard({ title, creator, stars, steps }: TrailCardProps) {
         mt={2}
         align='end'
         justify='space-between'
-        cursor='pointer'
-        onClick={toggleExpand}
       >
         <Flex
           id='stars-container'
@@ -72,7 +70,7 @@ function TrailCard({ title, creator, stars, steps }: TrailCardProps) {
           </Text>
           <img id='star' src={star} alt='estrelas' />
         </Flex>
-        <Text ml={2} color='white' fontSize='14px'>
+        <Text ml={2} color='white' fontSize='14px' cursor='pointer' onClick={toggleExpand}>
           <ArrowDownIcon
             sx={{ transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)', fontSize: '16px', marginRight: '3px' }}
           />

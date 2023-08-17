@@ -3,7 +3,7 @@ export type User = {
   username: string
   firstName: string
   lastName: string
-  profilePicturePath: string | null
+  profilePicturePath: string
   level: number
 }
 
