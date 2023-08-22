@@ -31,7 +31,7 @@ interface Topic {
 }
 
 type TrailCreationFormProps = {
-  trailId: number
+  trailId?: number
 }
 
 function TrailCreationForm({ trailId }: TrailCreationFormProps) {
@@ -85,7 +85,7 @@ function TrailCreationForm({ trailId }: TrailCreationFormProps) {
       return
     }
 
-    fetch(`${typeof import.meta.env.VITE_API_BASE_URL === 'string' ? import.meta.env.VITE_API_BASE_URL : ''}/trail/${trailId}`, {
+    fetch(`${typeof import.meta.env.VITE_API_BASE_URL === 'string' ? import.meta.env.VITE_API_BASE_URL : ''}/trail/${trailId ? trailId : ''}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -143,7 +143,7 @@ function TrailCreationForm({ trailId }: TrailCreationFormProps) {
   }, [])
 
   useEffect(() => {
-    fetch(`${typeof import.meta.env.VITE_API_BASE_URL === 'string' ? import.meta.env.VITE_API_BASE_URL : ''}/trail/${trailId}`)
+    fetch(`${typeof import.meta.env.VITE_API_BASE_URL === 'string' ? import.meta.env.VITE_API_BASE_URL : ''}/trail/${trailId ? trailId : ''}`)
       .then((res) => res.json())
       .then(({ trail }: { trail: Trail }) => {
         setTitle(trail.title)
