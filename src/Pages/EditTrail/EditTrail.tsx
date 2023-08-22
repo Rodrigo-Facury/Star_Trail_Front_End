@@ -1,16 +1,19 @@
+import { useParams } from 'react-router-dom';
 import StarTrailFooter from '../../Components/StarTrailFooter';
 import StarTrailHeader from '../../Components/StarTrailHeader';
 import TrailCreationForm from '../../Components/TrailCreationForm'
-import './CreateTrail.css'
+import './EditTrail.css'
 
-function CreateTrail() {
+function EditTrail() {
+  const { trailId } = useParams()
+
   return (
-    <main id='create-trail-page'>
+    <main id='edit-trail-page'>
       <StarTrailHeader />
-      <TrailCreationForm />
+      <TrailCreationForm trailId={Number(trailId)} />
       <StarTrailFooter />
     </main>
   );
 }
 
-export default CreateTrail;
+export default EditTrail;

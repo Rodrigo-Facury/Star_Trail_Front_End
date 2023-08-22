@@ -25,7 +25,7 @@ function LoginForm() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
   const handleSubmit = () => {
-    fetch('http://localhost:3001/user/login', {
+    fetch(`${typeof import.meta.env.VITE_API_BASE_URL === 'string' ? import.meta.env.VITE_API_BASE_URL : ''}/user/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

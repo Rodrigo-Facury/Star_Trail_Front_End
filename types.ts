@@ -4,6 +4,7 @@ export type User = {
   firstName: string
   lastName: string
   profilePicturePath: string
+  aboutMe?: string
   level: number
 }
 
@@ -24,6 +25,8 @@ export type Trail = {
   steps: Step[]
   creator: User
   starsCount: number
+  Topics: { name: string }[]
+  stars: { userId: number }[]
 }
 
 export type FeedResponse = {

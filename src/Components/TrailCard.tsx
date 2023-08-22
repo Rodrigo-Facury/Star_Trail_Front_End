@@ -1,27 +1,112 @@
-import { Box, Collapse, Flex, Heading, Image, Text } from '@chakra-ui/react'
+import { Badge, Box, Button, Collapse, Flex, Heading, IconButton, Image, Menu, MenuButton, MenuItem, MenuList, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text } from '@chakra-ui/react'
 import { Step, User } from '../../types'
 import { statusIcons } from '../helpers/statusIcons'
 import star from '../assets/star.png'
 import './TrailCard.css'
-import { useState } from 'react'
-import { ArrowDownIcon } from '@chakra-ui/icons'
+import { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import { ArrowDownIcon, EditIcon } from '@chakra-ui/icons'
+import secureLocalStorage from 'react-secure-storage'
+import jwtDecode from 'jwt-decode'
+import { useNavigate } from 'react-router-dom'
 
 type TrailCardProps = {
   title: string
+  topics: { name: string }[]
   creator: User
   stars: number
   steps: Step[]
+  peopleWhoStarred: number[],
+  id: string
+  trailId: number
+  setReload: Dispatch<SetStateAction<boolean>>
 }
 
-function TrailCard({ title, creator, stars, steps }: TrailCardProps) {
+function TrailCard({ title, topics, creator, stars, steps, peopleWhoStarred, id, trailId, setReload }: TrailCardProps) {
   const [expanded, setExpanded] = useState<boolean>(false)
+  const [user, setUser] = useState<User | undefined>()
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const token: string | number | boolean | object | null = secureLocalStorage.getItem('st_token')
+  const [showModal, setShowModal] = useState(false)
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
+
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (token && typeof token === 'string') {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
+      const tokenUser: User = jwtDecode(token)
+
+      setUser(tokenUser)
+    }
+  }, [setUser, token])
+
+  const openModal = () => {
+    setShowModal(true)
+  }
+
+  const closeModal = () => {
+    setShowModal(false)
+  }
+
+  const openDeleteModal = () => {
+    setShowDeleteModal(true)
+  }
+
+  const closeDeleteModal = () => {
+    setShowDeleteModal(false)
+  }
 
   function toggleExpand() {
     setExpanded(!expanded)
   }
 
-  function addStar() {
-    console.log('add')
+  function handleDelete() {
+    if (typeof token !== 'string') {
+      return
+    }
+
+    fetch(`${typeof import.meta.env.VITE_API_BASE_URL === 'string' ? import.meta.env.VITE_API_BASE_URL : ''}/trail/${trailId}`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: token,
+      },
+    })
+      .then((res) => {
+        if (res.ok) {
+          console.log('Trilha deletada com sucesso!')
+          setReload(true)
+          closeDeleteModal()
+        } else {
+          console.log(res)
+        }
+      })
+      .catch((err) => console.error(err))
+
+  }
+
+
+  function addOrRemoveStar() {
+
+    if (typeof token !== 'string') {
+      return
+    }
+
+    fetch(`${typeof import.meta.env.VITE_API_BASE_URL === 'string' ? import.meta.env.VITE_API_BASE_URL : ''}/trail/star/${trailId}`, {
+      method: 'POST',
+      headers: {
+        Authorization: token
+      }
+    })
+      .then((res) => {
+        if (res.ok) {
+          console.log('Trilha curtida com sucesso!')
+        } else {
+          console.log(res)
+        }
+      })
+      .catch((err) => console.error(err))
+
+    setReload(true)
   }
 
   return (
@@ -33,37 +118,98 @@ function TrailCard({ title, creator, stars, steps }: TrailCardProps) {
       mb={4}
       fontFamily='Barlow, sans-serif'
       color='white'
+      key={id}
     >
-      <Flex align='center' marginBottom='15px'>
-        <Image
-          src={creator.profilePicturePath}
-          alt={`${creator.username}'s Profile Picture`}
-          boxSize='40px'
-          borderRadius='full'
-          mr={2}
-        />
-        <Text>
-          {creator.username} {statusIcons[creator?.level]}
-        </Text>
+      <Flex justifyContent='space-between'>
+        <Flex align='center' marginBottom='15px' cursor='pointer' onClick={() => navigate(`/profile/${creator.username}`)}>
+          <Image
+            src={creator.profilePicturePath}
+            alt={`${creator.username}'s Profile Picture`}
+            boxSize='40px'
+            borderRadius='full'
+            objectFit='cover'
+            mr={2}
+          />
+          <Text>
+            {creator.username} {statusIcons[creator?.level]}
+          </Text>
+        </Flex>
+        {user && user.id === creator.id && (
+          <Menu>
+            <MenuButton as={IconButton} icon={<EditIcon />} variant='ghost' colorScheme='whatsapp' />
+            <MenuList>
+              <MenuItem color='#1E1E1E' onClick={() => navigate(`/edit-trail/${trailId}`)}>Editar</MenuItem>
+              <MenuItem color='red.500' onClick={openDeleteModal}>Deletar</MenuItem>
+            </MenuList>
+          </Menu>
+        )}
+        <Modal isOpen={showDeleteModal} onClose={closeDeleteModal}>
+          <ModalOverlay />
+          <ModalContent alignSelf='center'>
+            <ModalHeader>Confirmar Deleção</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              Tem certeza que deseja deletar esta trilha?
+            </ModalBody>
+            <ModalFooter>
+              <Button colorScheme='gray' mr={3} onClick={closeDeleteModal}>
+                Cancelar
+              </Button>
+              <Button colorScheme='red' onClick={handleDelete}>
+                Deletar
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
       </Flex>
       <Heading as='h2' size='md' mb={2}>
         {title}
       </Heading>
-
+      <Flex margin='10px 0px'>
+        {topics.slice(0, 3).map((topic, index) => (
+          <Badge key={index} colorScheme='whatsapp' mr={1}>
+            {topic.name}
+          </Badge>
+        ))}
+        {topics.length > 3 && (
+          <Badge
+            cursor='pointer'
+            onClick={openModal}
+            colorScheme='whiteAlpha'
+          >
+            +
+            {topics.slice(3).length}
+          </Badge>
+        )}
+      </Flex>
+      <Modal isOpen={showModal} onClose={closeModal}>
+        <ModalOverlay />
+        <ModalContent alignSelf='center'>
+          <ModalCloseButton />
+          <ModalBody>
+            {topics.map((topic, index) => (
+              <Badge key={index} colorScheme='messenger' mr={1}>
+                {topic.name}
+              </Badge>
+            ))}
+          </ModalBody>
+        </ModalContent>
+      </Modal>
       <Flex
         mt={2}
         align='end'
         justify='space-between'
       >
         <Flex
-          id='stars-container'
+          id={`stars-container-${id}`}
+          className={user && peopleWhoStarred.includes(user.id) ? 'marked-stars-container' : ''}
           align='center'
           mt={2}
           padding='4px'
           borderRadius='8px'
           width='max-content !important'
           cursor='pointer'
-          onClick={addStar}
+          onClick={addOrRemoveStar}
         >
           <Text color='white' fontSize='14px'>
             {stars}

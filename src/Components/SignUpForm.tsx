@@ -75,7 +75,7 @@ function SignUpForm() {
 
     delete infoToSend.confirmPassword
 
-    fetch('http://localhost:3001/user', {
+    fetch(`${typeof import.meta.env.VITE_API_BASE_URL === 'string' ? import.meta.env.VITE_API_BASE_URL : ''}/user`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

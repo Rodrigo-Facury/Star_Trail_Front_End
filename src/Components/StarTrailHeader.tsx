@@ -3,7 +3,7 @@ import jwtDecode from 'jwt-decode'
 import './StarTrailHeader.css'
 import secureLocalStorage from 'react-secure-storage'
 import { User } from '../../types'
-import { Button, Container, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react'
+import { Button, Container, Image, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react'
 import { useNavigate } from 'react-router-dom'
 import { statusIcons } from '../helpers/statusIcons'
 
@@ -50,13 +50,13 @@ function StarTrailHeader() {
               <MenuButton as={Button} colorScheme='teal' variant='outline' padding='20px 15px'>
                 <div id='menu-title'>
                   <div className='user-avatar'>
-                    <img src={user?.profilePicturePath} alt='Avatar do Usuário' />
+                    <Image src={user?.profilePicturePath} alt='Avatar do Usuário' />
                   </div>
                   <h2>{user?.username} {statusIcons[user?.level]}</h2>
                 </div>
               </MenuButton>
               <MenuList>
-                <MenuItem onClick={() => navigate('/profile')}>Meu Perfil</MenuItem>
+                <MenuItem onClick={() => navigate(`/profile/${user.username}`)}>Meu Perfil</MenuItem>
                 <MenuItem onClick={() => navigate('/my-trails')}>Minhas Trilhas</MenuItem>
                 <MenuItem onClick={() => navigate('/trails-i-follow')}>Trilhas Que Sigo</MenuItem>
                 <MenuItem onClick={handleLogout}>Logout</MenuItem>

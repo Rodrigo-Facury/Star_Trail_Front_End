@@ -4,17 +4,25 @@ import TrailCard from '../../Components/TrailCard'
 import StarTrailHeader from '../../Components/StarTrailHeader'
 import { FeedResponse, Trail } from '../../../types'
 import { useEffect, useState } from 'react'
+import StarTrailFooter from '../../Components/StarTrailFooter'
 
 function Feed() {
   const [trails, setTrails] = useState<Trail[]>([])
   const [orderBy, setOrderBy] = useState<string>('createdAt')
+  const [reload, setReload] = useState<boolean>(true)
 
   useEffect(() => {
-    fetch(`http://localhost:3001/trail?orderBy=${orderBy}`)
-      .then((res) => res.json())
-      .then(({ trails }: FeedResponse) => setTrails(trails))
-      .catch((err) => console.error(err))
-  }, [orderBy])
+    if (reload) {
+      fetch(`${typeof import.meta.env.VITE_API_BASE_URL === 'string' ? import.meta.env.VITE_API_BASE_URL : ''}/trail?orderBy=${orderBy}`)
+        .then((res) => res.json())
+        .then(({ trails }: FeedResponse) => {
+          setTrails(trails)
+        })
+        .catch((err) => console.error(err))
+
+      setReload(false)
+    }
+  }, [orderBy, reload])
 
   return (
     <main id='feed-page'>
@@ -37,7 +45,10 @@ function Feed() {
               _selected={{
                 borderBottomColor: '#9FAFFF'
               }}
-              onClick={() => setOrderBy('createdAt')}
+              onClick={() => {
+                setOrderBy('createdAt')
+                setReload(true)
+              }}
             >
               Mais Recentes
             </Tab>
@@ -49,7 +60,10 @@ function Feed() {
               _selected={{
                 borderBottomColor: '#9FAFFF'
               }}
-              onClick={() => setOrderBy('starsCount')}
+              onClick={() => {
+                setOrderBy('starsCount')
+                setReload(true)
+              }}
             >
               Mais Populares
             </Tab>
@@ -61,10 +75,15 @@ function Feed() {
                   {trails.map((trail) => (
                     <TrailCard
                       key={trail.id}
+                      trailId={trail.id}
+                      id={`recent-${trail.id}`}
                       title={trail.title}
+                      topics={trail.Topics}
                       creator={trail.creator}
                       stars={trail.starsCount}
-                      steps={trail.steps}
+                      steps={trail.steps.sort((a, b) => a.position - b.position)}
+                      peopleWhoStarred={trail.stars.map(({ userId }) => userId)}
+                      setReload={setReload}
                     />
                   ))}
                 </Box>
@@ -76,10 +95,15 @@ function Feed() {
                   {trails.map((trail) => (
                     <TrailCard
                       key={trail.id}
+                      trailId={trail.id}
+                      id={`popular-${trail.id}`}
                       title={trail.title}
+                      topics={trail.Topics}
                       creator={trail.creator}
                       stars={trail.starsCount}
                       steps={trail.steps}
+                      peopleWhoStarred={trail.stars.map(({ userId }) => userId)}
+                      setReload={setReload}
                     />
                   ))}
                 </Box>
@@ -88,6 +112,7 @@ function Feed() {
           </TabPanels>
         </Tabs>
       </Container>
+      <StarTrailFooter />
     </main>
   )
 }
