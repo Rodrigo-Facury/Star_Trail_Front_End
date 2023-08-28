@@ -7,6 +7,8 @@ services:
       args:
         - NODE_ENV=prod
         - VITE_API_BASE_URL=${VITE_API_BASE_URL}
+        - VITE_SECURE_LOCAL_STORAGE_HASH_KEY=${VITE_SECURE_LOCAL_STORAGE_HASH_KEY}
+        - VITE_SECURE_LOCAL_STORAGE_PREFIX=${VITE_SECURE_LOCAL_STORAGE_PREFIX}
       dockerfile: Dockerfile
     restart: on-failure
     ports:
@@ -14,6 +16,8 @@ services:
     environment:
       - NODE_ENV=prod
       - VITE_API_BASE_URL=${VITE_API_BASE_URL}
+      - VITE_SECURE_LOCAL_STORAGE_HASH_KEY=${VITE_SECURE_LOCAL_STORAGE_HASH_KEY}
+      - VITE_SECURE_LOCAL_STORAGE_PREFIX=${VITE_SECURE_LOCAL_STORAGE_PREFIX}
     depends_on:
       - back
   back:
