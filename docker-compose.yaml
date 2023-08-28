@@ -11,9 +11,7 @@ services:
     ports:
       - 80:80
     volumes:
-     - type: bind
-       source: ./
-       target: /srv/app
+     - ./app:/srv/app
     tty: true
     depends_on:
       - back
