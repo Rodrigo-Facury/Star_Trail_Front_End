@@ -1,9 +1,7 @@
 version: '3.4'
 services:
   front:
-    image: node:alpine
     container_name: app
-    entrypoint: /bin/sh
     build:
       context: ./
       dockerfile: Dockerfile
