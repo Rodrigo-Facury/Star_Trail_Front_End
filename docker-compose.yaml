@@ -1,0 +1,65 @@
+version: '3'
+services:
+  front:
+    container_name: app
+    build:
+      context: ./front
+      args:
+        - NODE_ENV=prod
+        - REACT_APP_API_BASE_URL=${REACT_APP_API_BASE_URL}
+        - REACT_APP_BASE_URL=${REACT_APP_BASE_URL}
+      dockerfile: Dockerfile
+    restart: on-failure
+    ports:
+      - '80:80'
+    environment:
+      - NODE_ENV=prod
+      - REACT_APP_API_BASE_URL=${REACT_APP_API_BASE_URL}
+      - REACT_APP_BASE_URL=${REACT_APP_BASE_URL}
+    depends_on:
+      - back
+  back:
+    container_name: backend
+    build:
+      args:
+        - NODE_ENV=prod
+        - HM_DBUSERNAME=${HM_DBUSERNAME}
+        - HM_PASSWORD=${HM_PASSWORD}
+        - HM_DATABASE=${HM_DATABASE}
+        - HM_HOSTNAME=${HM_HOSTNAME}
+        - HM_DATABASE_PORT=${HM_DATABASE_PORT}
+        - SECRET=${SECRET}
+        - WB_SECRET=${WB_SECRET}
+        - MY_PASSWORD=${MY_PASSWORD}
+        - EMAIL_PASSWORD=${EMAIL_PASSWORD}
+      context: ./back
+      dockerfile: Dockerfile
+    restart: on-failure
+    ports:
+      - '3001:3001'
+    environment:
+      - NODE_ENV=prod
+      - HM_DBUSERNAME=${HM_DBUSERNAME}
+      - HM_PASSWORD=${HM_PASSWORD}
+      - HM_DATABASE=${HM_DATABASE}
+      - HM_HOSTNAME=${HM_HOSTNAME}
+      - HM_DATABASE_PORT=${HM_DATABASE_PORT}
+      - SECRET=${SECRET}
+      - WB_SECRET=${WB_SECRET}
+      - MY_PASSWORD=${MY_PASSWORD}
+      - EMAIL_PASSWORD=${EMAIL_PASSWORD}
+    volumes:
+      - uploads:/uploads
+    depends_on:
+      - database
+  database:
+    image: postgres:15.3-alpine
+    volumes:
+      - database:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_PASSWORD=${HM_PASSWORD}
+volumes:
+  database:
+  uploads:
