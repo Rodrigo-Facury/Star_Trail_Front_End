@@ -6,22 +6,20 @@ on:
 
 jobs:
   build:
+    name: Build
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout do repositório
-        uses: actions/checkout@v3
-      - name: Deploy para minha VPS
-        uses: easingthemes/ssh-deploy@main
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: SSH Server Deploy
+        uses: kostya-ten/ssh-server-deploy@v4
         with:
-          SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
-          ARGS: "-rlgoDzvc -i"
-          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
-          REMOTE_USER: ${{ secrets.REMOTE_USER }}
-          TARGET: ${{ secrets.REMOTE_TARGET }}
-          SCRIPT_BEFORE: |
+          host: ${{ secrets.REMOTE_HOST }}
+          port: ${{ secrets.REMOTE_PORT }}
+          username: ${{ secrets.REMOTE_USER }}
+          private_key: ${{ secrets.SERVER_SSH_KEY }}
+          scp_target: ${{ secrets.REMOTE_TARGET }}
+          before_script: |
+            df -h
+          after_script: |
             whoami
-            ls -al
-          SCRIPT_AFTER: |
-            whoami
-            ls -al
-            echo $RSYNC_STDOUT
