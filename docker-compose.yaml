@@ -1,15 +1,18 @@
-version: '3'
+version: '3.4'
 services:
   front:
+    image: node:alpine
     container_name: app
+    entrypoint: /bin/sh
+    working_dir: /srv/app
     build:
-      context: ./
+      # context: ./
       args:
         - NODE_ENV=prod
         - VITE_API_BASE_URL=${VITE_API_BASE_URL}
         - VITE_SECURE_LOCAL_STORAGE_HASH_KEY=${VITE_SECURE_LOCAL_STORAGE_HASH_KEY}
         - VITE_SECURE_LOCAL_STORAGE_PREFIX=${VITE_SECURE_LOCAL_STORAGE_PREFIX}
-      dockerfile: Dockerfile
+      # dockerfile: Dockerfile
     restart: on-failure
     ports:
       - '80:80'
@@ -18,6 +21,11 @@ services:
       - VITE_API_BASE_URL=${VITE_API_BASE_URL}
       - VITE_SECURE_LOCAL_STORAGE_HASH_KEY=${VITE_SECURE_LOCAL_STORAGE_HASH_KEY}
       - VITE_SECURE_LOCAL_STORAGE_PREFIX=${VITE_SECURE_LOCAL_STORAGE_PREFIX}
+    volumes:
+     - type: bind
+       source: ./
+       target: /srv/app
+    tty: true
     depends_on:
       - back
   back:
