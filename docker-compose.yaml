@@ -15,7 +15,7 @@ services:
       # dockerfile: Dockerfile
     restart: on-failure
     ports:
-      - '80:80'
+      - 8000:8000
     environment:
       - NODE_ENV=prod
       - VITE_API_BASE_URL=${VITE_API_BASE_URL}
