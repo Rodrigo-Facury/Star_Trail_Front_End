@@ -57,7 +57,7 @@ services:
     ports:
       - 5432:5432
     environment:
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_PASSWORD=${PASSWORD}
 volumes:
   database:
   uploads:
