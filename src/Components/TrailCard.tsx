@@ -104,13 +104,21 @@ function TrailCard({ title, topics, creator, trails, stars, steps, peopleWhoStar
             if (trail.id === trailId) {
               return {
                 ...trail,
-                starsCount: trail.starsCount + 1,
-                stars: [...trail.stars, { userId: user.id }],
+                starsCount: trail.stars.map(({ userId }) => userId).includes(user.id)
+                  ?
+                  Number(trail.starsCount) - 1
+                  :
+                  Number(trail.starsCount) + 1,
+                stars: trail.stars.map(({ userId }) => userId).includes(user.id)
+                  ?
+                  trail.stars.filter((star) => star.userId !== user.id)
+                  :
+                  [...trail.stars, { userId: user.id }],
               };
             }
             return trail;
           });
-          
+
           setTrails(updatedTrails);
         } else {
           console.log(res)
