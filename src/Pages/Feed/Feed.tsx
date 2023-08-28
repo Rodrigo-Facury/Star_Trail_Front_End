@@ -12,6 +12,7 @@ function Feed() {
   const [reload, setReload] = useState<boolean>(true)
 
   useEffect(() => {
+    console.log(reload)
     if (reload) {
       fetch(`${typeof import.meta.env.VITE_API_BASE_URL === 'string' ? import.meta.env.VITE_API_BASE_URL : ''}/trail?orderBy=${orderBy}`)
         .then((res) => res.json())
@@ -19,6 +20,8 @@ function Feed() {
           setTrails(trails)
         })
         .catch((err) => console.error(err))
+
+      console.log('recarregou')
 
       setReload(false)
     }
