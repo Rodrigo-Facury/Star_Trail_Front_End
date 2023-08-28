@@ -6,16 +6,16 @@ services:
     entrypoint: /bin/sh
     working_dir: /srv/app
     build:
-      # context: ./
+      context: ./
       args:
         - NODE_ENV=prod
         - VITE_API_BASE_URL=${VITE_API_BASE_URL}
         - VITE_SECURE_LOCAL_STORAGE_HASH_KEY=${VITE_SECURE_LOCAL_STORAGE_HASH_KEY}
         - VITE_SECURE_LOCAL_STORAGE_PREFIX=${VITE_SECURE_LOCAL_STORAGE_PREFIX}
-      # dockerfile: Dockerfile
+      dockerfile: Dockerfile
     restart: on-failure
     ports:
-      - 8000:8000
+      - 80:80
     environment:
       - NODE_ENV=prod
       - VITE_API_BASE_URL=${VITE_API_BASE_URL}
