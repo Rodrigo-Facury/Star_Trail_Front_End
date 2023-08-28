@@ -1,5 +1,5 @@
 import { Badge, Box, Button, Collapse, Flex, Heading, IconButton, Image, Menu, MenuButton, MenuItem, MenuList, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text } from '@chakra-ui/react'
-import { Step, User } from '../../types'
+import { Step, Trail, User } from '../../types'
 import { statusIcons } from '../helpers/statusIcons'
 import star from '../assets/star.png'
 import './TrailCard.css'
@@ -13,15 +13,17 @@ type TrailCardProps = {
   title: string
   topics: { name: string }[]
   creator: User
+  trails: Trail[]
   stars: number
   steps: Step[]
   peopleWhoStarred: number[],
   id: string
   trailId: number
   setReload: Dispatch<SetStateAction<boolean>>
+  setTrails: Dispatch<SetStateAction<Trail[]>>
 }
 
-function TrailCard({ title, topics, creator, stars, steps, peopleWhoStarred, id, trailId, setReload }: TrailCardProps) {
+function TrailCard({ title, topics, creator, trails, stars, steps, peopleWhoStarred, id, trailId, setReload, setTrails }: TrailCardProps) {
   const [expanded, setExpanded] = useState<boolean>(false)
   const [user, setUser] = useState<User | undefined>()
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -86,7 +88,6 @@ function TrailCard({ title, topics, creator, stars, steps, peopleWhoStarred, id,
 
 
   function addOrRemoveStar() {
-
     if (typeof token !== 'string') {
       return
     }
@@ -98,8 +99,19 @@ function TrailCard({ title, topics, creator, stars, steps, peopleWhoStarred, id,
       }
     })
       .then((res) => {
-        if (res.ok) {
-          console.log('Trilha curtida com sucesso!')
+        if (res.ok && user) {
+          const updatedTrails = trails.map(trail => {
+            if (trail.id === trailId) {
+              return {
+                ...trail,
+                starsCount: trail.starsCount + 1,
+                stars: [...trail.stars, { userId: user.id }],
+              };
+            }
+            return trail;
+          });
+          
+          setTrails(updatedTrails);
         } else {
           console.log(res)
         }

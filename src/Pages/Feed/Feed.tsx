@@ -12,7 +12,6 @@ function Feed() {
   const [reload, setReload] = useState<boolean>(true)
 
   useEffect(() => {
-    console.log(reload)
     if (reload) {
       fetch(`${typeof import.meta.env.VITE_API_BASE_URL === 'string' ? import.meta.env.VITE_API_BASE_URL : ''}/trail?orderBy=${orderBy}`)
         .then((res) => res.json())
@@ -21,16 +20,15 @@ function Feed() {
         })
         .catch((err) => console.error(err))
 
-      console.log('recarregou')
-
       setReload(false)
     }
+
   }, [orderBy, reload])
 
   return (
     <main id='feed-page'>
       <StarTrailHeader />
-      <Container minWidth='60vw'>
+      <Container maxWidth='750px' flexGrow='1'>
         <Tabs align='start'>
           <TabList
             sx={{
@@ -87,6 +85,8 @@ function Feed() {
                       steps={trail.steps.sort((a, b) => a.position - b.position)}
                       peopleWhoStarred={trail.stars.map(({ userId }) => userId)}
                       setReload={setReload}
+                      setTrails={setTrails}
+                      trails={trails}
                     />
                   ))}
                 </Box>
@@ -107,6 +107,8 @@ function Feed() {
                       steps={trail.steps}
                       peopleWhoStarred={trail.stars.map(({ userId }) => userId)}
                       setReload={setReload}
+                      setTrails={setTrails}
+                      trails={trails}
                     />
                   ))}
                 </Box>
