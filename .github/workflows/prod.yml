@@ -18,7 +18,7 @@ jobs:
           port: ${{ secrets.REMOTE_PORT }}
           username: ${{ secrets.REMOTE_USER }}
           private_key: ${{ secrets.SERVER_SSH_KEY }}
-          scp_source: /
+          scp_source: ./
           scp_target: ${{ secrets.REMOTE_TARGET }}
           before_script: |
             df -h
