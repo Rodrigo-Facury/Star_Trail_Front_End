@@ -16,11 +16,27 @@ services:
   back:
     container_name: backend
     build:
+      args:
+        - NODE_ENV=prod
+        - DBUSERNAME=${DBUSERNAME}
+        - PASSWORD=${PASSWORD}
+        - DATABASE=${DATABASE}
+        - HOSTNAME=${HOSTNAME}
+        - DATABASE_PORT=${DATABASE_PORT}
+        - SECRET=${SECRET}
       context: ../back
       dockerfile: Dockerfile
     restart: on-failure
     ports:
       - '3001:3001'
+    environment:
+      - NODE_ENV=prod
+      - DBUSERNAME=${DBUSERNAME}
+      - PASSWORD=${PASSWORD}
+      - DATABASE=${DATABASE}
+      - HOSTNAME=${HOSTNAME}
+      - DATABASE_PORT=${DATABASE_PORT}
+      - SECRET=${SECRET}
     volumes:
       - uploads:/public/uploads
     depends_on:
