@@ -28,6 +28,7 @@ COPY nginx/nginx.conf /etc/nginx/conf.d/default.conf
 # Install Certbot and configure SSL
 RUN apk add --no-cache certbot
 # Instalar o Certbot
+RUN apt install apt-get
 RUN apt-get update && apt-get install -y certbot
 
 # Obter o certificado SSL
