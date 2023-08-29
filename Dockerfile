@@ -30,7 +30,7 @@ RUN apk update
 RUN apk add --no-cache certbot
 
 # Obter o certificado SSL
-RUN certbot certonly --standalone --non-interactive --agree-tos --email rodrigo.facury14@gmail.com -d www.startrail.com.br,startrail.com.br
+RUN certbot certonly --standalone --non-interactive --agree-tos --email rodrigo.facury14@gmail.com -d startrail.com.br
 
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
