@@ -26,10 +26,8 @@ RUN rm /etc/nginx/conf.d/default.conf
 COPY nginx/nginx.conf /etc/nginx/conf.d/default.conf
 
 # Install Certbot and configure SSL
+RUN apk update
 RUN apk add --no-cache certbot
-# Instalar o Certbot
-RUN apt install apt-get
-RUN apt-get update && apt-get install -y certbot
 
 # Obter o certificado SSL
 RUN certbot certonly --standalone --non-interactive --agree-tos --email rodrigo.facury14@gmail.com -d www.startrail.com.br,startrail.com.br
