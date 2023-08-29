@@ -45,6 +45,7 @@ services:
     image: postgres:15.3-alpine
     volumes:
       - database:/var/lib/postgresql/data
+    restart: on-failure
     ports:
       - 5432:5432
     environment:

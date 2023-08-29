@@ -28,7 +28,7 @@ function Feed() {
   return (
     <main id='feed-page'>
       <StarTrailHeader />
-      <Container maxWidth='750px' flexGrow='1'>
+      <Container id='feed-container' maxWidth='700px' padding='0px' flexGrow='1' alignSelf='center'>
         <Tabs align='start'>
           <TabList
             sx={{
@@ -70,7 +70,7 @@ function Feed() {
             </Tab>
           </TabList>
           <TabPanels>
-            <TabPanel>
+            <TabPanel padding='0px'>
               <Center>
                 <Box mt={6} w='100%'>
                   {trails.map((trail) => (
@@ -92,7 +92,7 @@ function Feed() {
                 </Box>
               </Center>
             </TabPanel>
-            <TabPanel>
+            <TabPanel padding='0px'>
               <Center>
                 <Box mt={6} w='100%'>
                   {trails.map((trail) => (

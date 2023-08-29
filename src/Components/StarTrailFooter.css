@@ -34,3 +34,13 @@
   display: flex;
   align-items: end;
 }
+
+@media only screen and (max-width: 414px) {
+  .star-trail-footer {
+    font-size: 12px;
+  }
+
+  .my-name {
+    font-size: 14px !important;
+  }
+}
