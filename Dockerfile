@@ -27,6 +27,7 @@ COPY nginx/nginx.conf /etc/nginx/conf.d/default.conf
 
 # Install Certbot and configure SSL
 RUN apk add --no-cache certbot
+RUN mkdir -p /var/www/certbot
 RUN certbot certonly --webroot -w /var/www/certbot -d www.startrail.com.br,startrail.com.br --agree-tos -n --email rodrigo.facury14@gmail.com
 
 EXPOSE 80
