@@ -6,6 +6,7 @@ import { User } from '../../types'
 import { Button, Container, Image, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react'
 import { useNavigate } from 'react-router-dom'
 import { statusIcons } from '../helpers/statusIcons'
+import { AddIcon } from '@chakra-ui/icons'
 
 function StarTrailHeader() {
   const [user, setUser] = useState<User | undefined>()
@@ -33,26 +34,27 @@ function StarTrailHeader() {
       <div className='star-trail-logo' onClick={() => navigate('/')}>
         <h1>Star Trail</h1>
       </div>
-      <Container margin='0px' width='fit-content'>
-        <Button marginRight='10px' colorScheme='whatsapp' padding='15px' fontFamily='barlow, sans-serif' fontSize='18px' onClick={() => {
+      <Container margin='0px' width='fit-content' padding='0px'>
+        <Button id='create-trail-button' marginRight='10px' colorScheme='whatsapp' padding='15px' fontFamily='barlow, sans-serif' fontSize='18px' onClick={() => {
           if (user) {
             navigate('/create-trail')
           } else {
             navigate('/login')
           }
         }}>
-          Criar Trilha
+          <span id='create-trail-text'>Criar Trilha</span>
+          <AddIcon id='add-icon' display='none' />
         </Button>
         {
           user
             ?
             <Menu>
-              <MenuButton as={Button} colorScheme='teal' variant='outline' padding='20px 15px'>
+              <MenuButton className='avatar-container' as={Button} colorScheme='teal' variant='outline' padding='20px 15px'>
                 <div id='menu-title'>
                   <div className='user-avatar'>
                     <Image src={user?.profilePicturePath} alt='Avatar do Usuário' />
                   </div>
-                  <h2>{user?.username} {statusIcons[user?.level]}</h2>
+                  <h2 id='username'>{user?.username} {statusIcons[user?.level]}</h2>
                 </div>
               </MenuButton>
               <MenuList>
