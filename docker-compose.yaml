@@ -48,8 +48,8 @@ services:
       - SECRET=${SECRET}
     volumes:
       - uploads:/public/uploads
-      - ./certbot/www:/var/www/certbot/:ro
-      - ./certbot/conf/:/etc/nginx/ssl/:ro
+      - ../front/certbot/www:/var/www/certbot/:ro
+      - ../front/certbot/conf/:/etc/nginx/ssl/:ro
     depends_on:
       - database
   database:
