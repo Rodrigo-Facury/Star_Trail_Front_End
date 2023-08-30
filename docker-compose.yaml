@@ -37,6 +37,7 @@ services:
     restart: on-failure
     ports:
       - '3001:3001'
+      - '8080:8080'
     environment:
       - NODE_ENV=prod
       - DBUSERNAME=${DBUSERNAME}
@@ -47,6 +48,8 @@ services:
       - SECRET=${SECRET}
     volumes:
       - uploads:/public/uploads
+      - ./certbot/www:/var/www/certbot/:ro
+      - ./certbot/conf/:/etc/nginx/ssl/:ro
     depends_on:
       - database
   database:
