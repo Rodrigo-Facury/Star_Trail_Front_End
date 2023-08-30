@@ -8,9 +8,22 @@ services:
     restart: on-failure
     ports:
       - 80:80
+      - 443:443
     volumes:
-     - ./app:/srv/app
+      - ./app:/srv/app
+      - ./dhparam:/etc/nginx/dhparam
+      - ./certbot/conf/:/etc/nginx/ssl/
+      - ./certbot/data:/usr/share/nginx/html/letsencrypt
     tty: true
+    depends_on:
+      - certbot
+  certbot:
+    image: certbot/certbot:latest
+    command: certonly --webroot --webroot-path=/usr/share/nginx/html/letsencrypt --email rodrigo.facury14@gmail.com --agree-tos --no-eff-email -d startrail.com.br
+    volumes:
+      - ./certbot/conf/:/etc/letsencrypt
+      - ./certbot/logs/:/var/log/letsencrypt
+      - ./certbot/data:/usr/share/nginx/html/letsencrypt
     depends_on:
       - back
   back:
