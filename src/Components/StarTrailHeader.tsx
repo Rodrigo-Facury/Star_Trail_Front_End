@@ -59,8 +59,8 @@ function StarTrailHeader() {
               </MenuButton>
               <MenuList>
                 <MenuItem onClick={() => navigate(`/profile/${user.username}`)}>Meu Perfil</MenuItem>
-                <MenuItem onClick={() => navigate('/my-trails')}>Minhas Trilhas</MenuItem>
-                <MenuItem onClick={() => navigate('/trails-i-follow')}>Trilhas Que Sigo</MenuItem>
+                {/* <MenuItem onClick={() => navigate('/my-trails')}>Minhas Trilhas</MenuItem>
+                <MenuItem onClick={() => navigate('/trails-i-follow')}>Trilhas Que Sigo</MenuItem> */}
                 <MenuItem onClick={handleLogout}>Logout</MenuItem>
               </MenuList>
             </Menu>
