@@ -36,8 +36,7 @@ services:
       dockerfile: Dockerfile
     restart: on-failure
     ports:
-      - '3001:3001'
-      - '8080:8080'
+      - 3001:3001
     environment:
       - NODE_ENV=prod
       - DBUSERNAME=${DBUSERNAME}
@@ -48,8 +47,6 @@ services:
       - SECRET=${SECRET}
     volumes:
       - uploads:/public/uploads
-      - ../front/certbot/www:/var/www/certbot/:ro
-      - ../front/certbot/conf/:/etc/nginx/ssl/:ro
     depends_on:
       - database
   database:
