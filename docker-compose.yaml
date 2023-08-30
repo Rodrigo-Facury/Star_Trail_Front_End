@@ -11,19 +11,16 @@ services:
       - 443:443
     volumes:
       - ./app:/srv/app
-      - ./nginx/conf/:/etc/nginx/conf.d/:ro
       - ./certbot/www:/var/www/certbot/:ro
       - ./certbot/conf/:/etc/nginx/ssl/:ro
     tty: true
     depends_on:
-      - certbot
+      - back
   certbot:
     image: certbot/certbot:latest
     volumes:
       - ./certbot/www/:/var/www/certbot/:rw
       - ./certbot/conf/:/etc/letsencrypt/:rw
-    depends_on:
-      - back
   back:
     container_name: backend
     build:
