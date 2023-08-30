@@ -9,7 +9,6 @@ services:
     ports:
       - 80:80
       - 443:443
-      - 8080:8080
     volumes:
       - ./app:/srv/app
       - ./certbot/www:/var/www/certbot/:ro
@@ -17,11 +16,6 @@ services:
     tty: true
     depends_on:
       - back
-  certbot:
-    image: certbot/certbot:latest
-    volumes:
-      - ./certbot/www/:/var/www/certbot/:rw
-      - ./certbot/conf/:/etc/letsencrypt/:rw
   back:
     container_name: backend
     build:
@@ -53,6 +47,12 @@ services:
       - ../front/certbot/conf/:/etc/ssl/:ro
     depends_on:
       - database
+      - certbot
+  certbot:
+    image: certbot/certbot:latest
+    volumes:
+      - ./certbot/www/:/var/www/certbot/:rw
+      - ./certbot/conf/:/etc/letsencrypt/:rw
   database:
     image: postgres:15.3-alpine
     volumes:
