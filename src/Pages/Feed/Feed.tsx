@@ -10,20 +10,56 @@ function Feed() {
   const [trails, setTrails] = useState<Trail[]>([])
   const [orderBy, setOrderBy] = useState<string>('createdAt')
   const [reload, setReload] = useState<boolean>(true)
+  const [stopFeed, setStopFeed] = useState<boolean>(false)
+  const [firstRequest, setFirstRequest] = useState<boolean>(true)
+  const [currentPage, setCurrentPage] = useState<number>(1)
 
   useEffect(() => {
-    if (reload) {
-      fetch(`${typeof import.meta.env.VITE_API_BASE_URL === 'string' ? import.meta.env.VITE_API_BASE_URL : ''}/trail?orderBy=${orderBy}`)
+    if (reload && !stopFeed) {
+      fetch(`${typeof import.meta.env.VITE_API_BASE_URL === 'string' ? import.meta.env.VITE_API_BASE_URL : ''}/trail?orderBy=${orderBy}&page=${currentPage}`)
         .then((res) => res.json())
-        .then(({ trails }: FeedResponse) => {
-          setTrails(trails)
+        .then(({ trails, nextPage, totalPages }: FeedResponse) => {
+          
+          if (firstRequest) {
+            setTrails(trails)
+            setFirstRequest(false)
+          } else {
+            setTrails((prevTrails) => [...prevTrails, ...trails])
+          }
+          
+          if (nextPage <= totalPages) {
+            setCurrentPage(nextPage)
+          } else {
+            setStopFeed(true)
+          }
         })
         .catch((err) => console.error(err))
 
       setReload(false)
     }
 
-  }, [orderBy, reload])
+  }, [orderBy, reload, currentPage, stopFeed, firstRequest])
+
+  useEffect(() => {
+    setStopFeed(false)
+    setFirstRequest(true)
+    setCurrentPage(1)
+  }, [orderBy])
+
+  function handleScroll() {
+    const { scrollTop, clientHeight, scrollHeight } = document.documentElement
+
+    if (scrollHeight - scrollTop === clientHeight) {
+      setReload(true)
+    }
+  }
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll)
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+    }
+  }, [])
 
   return (
     <main id='feed-page'>
@@ -84,7 +120,6 @@ function Feed() {
                       stars={trail.starsCount}
                       steps={trail.steps.sort((a, b) => a.position - b.position)}
                       peopleWhoStarred={trail.stars.map(({ userId }) => userId)}
-                      setReload={setReload}
                       setTrails={setTrails}
                       trails={trails}
                     />
@@ -106,7 +141,6 @@ function Feed() {
                       stars={trail.starsCount}
                       steps={trail.steps}
                       peopleWhoStarred={trail.stars.map(({ userId }) => userId)}
-                      setReload={setReload}
                       setTrails={setTrails}
                       trails={trails}
                     />
