@@ -25,3 +25,43 @@
   left: 25px;
   font-size: 25px;
 }
+
+@media only screen and (max-width: 414px) {
+  #login-page {
+    margin: 0px;
+    background-color: #1E1E1E;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-image: url(../../assets/logo.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+
+  #title {
+    font-size: 20px;
+    margin: 15px;
+    align-self: flex-start;
+    justify-self: flex-start;
+  }
+
+  #welcome {
+    display: none;
+  }
+
+  #stars {
+    display: none;
+  }
+
+  #tabs {
+    background-color: #1e1e1eec;
+    padding: 15px;
+    border-radius: 8px;
+  }
+
+  #tab-list {
+    position: inherit;
+    margin-bottom: 30px;
+  }
+}

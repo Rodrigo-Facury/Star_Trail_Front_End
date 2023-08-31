@@ -9,11 +9,13 @@ function Login() {
     <main id="login-page">
       <h1 id="title">Star Trail</h1>
       <h2 id="welcome">Entre e trilhe seu caminho!</h2>
-      <img width={350} src={logo} alt="Logo da Star Trail" />
+      <img id="stars" width={350} src={logo} alt="Logo da Star Trail" />
       <Tabs
         align="end"
+        id="tabs"
       >
         <TabList
+          id="tab-list"
           sx={{
             color: "white",
             borderBottom: "none",
