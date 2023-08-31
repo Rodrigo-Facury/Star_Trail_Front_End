@@ -6,3 +6,19 @@
   flex-direction: column;
   justify-content: space-between;
 }
+
+@media only screen and (max-width: 414px) {
+  #profile-container {
+    flex-direction: column;
+    width: 100%;
+    align-items: stretch;
+  }
+
+  #about-me {
+    width: 90vw;
+  }
+
+  #user-info {
+    margin-bottom: 0px;
+  }
+}
