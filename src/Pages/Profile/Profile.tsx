@@ -172,6 +172,7 @@ function Profile() {
                     </span>
                     <Text marginLeft='5px'>Seguir</Text>
                   </Button>
+                  // TODO: lógica de deixar de seguir
               }
             </Flex>
           </Flex>
