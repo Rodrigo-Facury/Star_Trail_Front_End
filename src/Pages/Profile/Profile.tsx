@@ -7,7 +7,7 @@ import { User } from '../../../types'
 import { Flex, Heading, Image, Text, Button, Input, FormLabel, Card, CardHeader, CardBody, Textarea } from '@chakra-ui/react'
 import secureLocalStorage from 'react-secure-storage'
 import jwtDecode from 'jwt-decode'
-import { AddIcon, EditIcon } from '@chakra-ui/icons'
+import { EditIcon } from '@chakra-ui/icons'
 
 function Profile() {
   const [user, setUser] = useState<User | undefined>()
