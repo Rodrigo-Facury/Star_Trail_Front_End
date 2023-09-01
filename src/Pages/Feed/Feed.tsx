@@ -3,7 +3,7 @@ import { Box, Center, Container, Tab, TabList, TabPanel, TabPanels, Tabs } from 
 import TrailCard from '../../Components/TrailCard'
 import StarTrailHeader from '../../Components/StarTrailHeader'
 import { FeedResponse, Trail } from '../../../types'
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import StarTrailFooter from '../../Components/StarTrailFooter'
 
 function Feed() {
@@ -19,14 +19,14 @@ function Feed() {
       fetch(`${typeof import.meta.env.VITE_API_BASE_URL === 'string' ? import.meta.env.VITE_API_BASE_URL : ''}/trail?orderBy=${orderBy}&page=${currentPage}`)
         .then((res) => res.json())
         .then(({ trails, nextPage, totalPages }: FeedResponse) => {
-          
+
           if (firstRequest) {
             setTrails(trails)
             setFirstRequest(false)
           } else {
             setTrails((prevTrails) => [...prevTrails, ...trails])
           }
-          
+
           if (nextPage <= totalPages) {
             setCurrentPage(nextPage)
           } else {
@@ -109,20 +109,34 @@ function Feed() {
             <TabPanel padding='0px'>
               <Center>
                 <Box mt={6} w='100%'>
-                  {trails.map((trail) => (
-                    <TrailCard
-                      key={trail.id}
-                      trailId={trail.id}
-                      id={`recent-${trail.id}`}
-                      title={trail.title}
-                      topics={trail.Topics}
-                      creator={trail.creator}
-                      stars={trail.starsCount}
-                      steps={trail.steps.sort((a, b) => a.position - b.position)}
-                      peopleWhoStarred={trail.stars.map(({ userId }) => userId)}
-                      setTrails={setTrails}
-                      trails={trails}
-                    />
+                  {trails.map((trail, index) => (
+                    <React.Fragment key={trail.id}>
+                      <TrailCard
+                        key={trail.id}
+                        trailId={trail.id}
+                        id={`recent-${trail.id}`}
+                        title={trail.title}
+                        topics={trail.Topics}
+                        creator={trail.creator}
+                        stars={trail.starsCount}
+                        steps={trail.steps.sort((a, b) => a.position - b.position)}
+                        peopleWhoStarred={trail.stars.map(({ userId }) => userId)}
+                        setTrails={setTrails}
+                        trails={trails}
+                      />
+                      {(index + 1) % 5 === 0 && index !== trails.length - 1 && (
+                        <div className="ads-container">
+                          <ins
+                            className="adsbygoogle"
+                            style={{ display: 'block' }}
+                            data-ad-format="fluid"
+                            data-ad-layout-key="-gu-1c+5a-1w-7f"
+                            data-ad-client="ca-pub-7126972184814436"
+                            data-ad-slot="3120459766"
+                          ></ins>
+                        </div>
+                      )}
+                    </React.Fragment>
                   ))}
                 </Box>
               </Center>
@@ -130,20 +144,34 @@ function Feed() {
             <TabPanel padding='0px'>
               <Center>
                 <Box mt={6} w='100%'>
-                  {trails.map((trail) => (
-                    <TrailCard
-                      key={trail.id}
-                      trailId={trail.id}
-                      id={`popular-${trail.id}`}
-                      title={trail.title}
-                      topics={trail.Topics}
-                      creator={trail.creator}
-                      stars={trail.starsCount}
-                      steps={trail.steps}
-                      peopleWhoStarred={trail.stars.map(({ userId }) => userId)}
-                      setTrails={setTrails}
-                      trails={trails}
-                    />
+                  {trails.map((trail, index) => (
+                    <React.Fragment key={trail.id}>
+                      <TrailCard
+                        key={trail.id}
+                        trailId={trail.id}
+                        id={`recent-${trail.id}`}
+                        title={trail.title}
+                        topics={trail.Topics}
+                        creator={trail.creator}
+                        stars={trail.starsCount}
+                        steps={trail.steps.sort((a, b) => a.position - b.position)}
+                        peopleWhoStarred={trail.stars.map(({ userId }) => userId)}
+                        setTrails={setTrails}
+                        trails={trails}
+                      />
+                      {(index + 1) % 5 === 0 && index !== trails.length - 1 && (
+                        <div className="ads-container">
+                          <ins
+                            className="adsbygoogle"
+                            style={{ display: 'block' }}
+                            data-ad-format="fluid"
+                            data-ad-layout-key="-gu-1c+5a-1w-7f"
+                            data-ad-client="ca-pub-7126972184814436"
+                            data-ad-slot="3120459766"
+                          ></ins>
+                        </div>
+                      )}
+                    </React.Fragment>
                   ))}
                 </Box>
               </Center>
