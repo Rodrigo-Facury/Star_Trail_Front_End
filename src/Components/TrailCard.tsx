@@ -19,11 +19,10 @@ type TrailCardProps = {
   peopleWhoStarred: number[],
   id: string
   trailId: number
-  setReload: Dispatch<SetStateAction<boolean>>
   setTrails: Dispatch<SetStateAction<Trail[]>>
 }
 
-function TrailCard({ title, topics, creator, trails, stars, steps, peopleWhoStarred, id, trailId, setReload, setTrails }: TrailCardProps) {
+function TrailCard({ title, topics, creator, trails, stars, steps, peopleWhoStarred, id, trailId, setTrails }: TrailCardProps) {
   const [expanded, setExpanded] = useState<boolean>(false)
   const [user, setUser] = useState<User | undefined>()
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -76,7 +75,9 @@ function TrailCard({ title, topics, creator, trails, stars, steps, peopleWhoStar
       .then((res) => {
         if (res.ok) {
           console.log('Trilha deletada com sucesso!')
-          setReload(true)
+          const updatedTrails = trails.filter((trail) => trail.id !== trailId)
+
+          setTrails(updatedTrails)
           closeDeleteModal()
         } else {
           console.log(res)
@@ -125,8 +126,6 @@ function TrailCard({ title, topics, creator, trails, stars, steps, peopleWhoStar
         }
       })
       .catch((err) => console.error(err))
-
-    setReload(true)
   }
 
   return (

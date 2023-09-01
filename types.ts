@@ -31,7 +31,7 @@ export type Trail = {
 
 export type FeedResponse = {
   trails: Trail[]
-  currentPage: number
+  nextPage: number
   totalPages: number
   message: string
 }
