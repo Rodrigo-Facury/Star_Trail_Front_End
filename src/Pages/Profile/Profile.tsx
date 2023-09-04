@@ -50,6 +50,7 @@ function Profile() {
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) => {
     const { name, value } = event.target
+
     setEditedUser((prevUser: User) => ({
       ...prevUser,
       [name]: value,
@@ -172,7 +173,7 @@ function Profile() {
                     </span>
                     <Text marginLeft='5px'>Seguir</Text>
                   </Button>
-                  // TODO: lógica de deixar de seguir
+                  // TODO: lógica de seguir e deixar de seguir
               }
             </Flex>
           </Flex>
@@ -200,7 +201,7 @@ function Profile() {
                       </Flex>
                       :
                       <Flex flexDirection='column' width='100%'>
-                        <Text>{user.aboutMe}</Text>
+                        <Text whiteSpace='pre-line'>{user.aboutMe}</Text>
                         <Button
                           colorScheme='purple'
                           onClick={handleEditToggle}
@@ -212,7 +213,7 @@ function Profile() {
                         </Button>
                       </Flex>
                     :
-                    <Text>{user.aboutMe}</Text>
+                    <Text whiteSpace='pre-line'>{user.aboutMe}</Text>
                 }
               </CardBody>
             </Card>
