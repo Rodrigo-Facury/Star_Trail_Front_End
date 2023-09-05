@@ -135,7 +135,7 @@ function Profile() {
                   borderRadius="50%"
                 />
             }
-            <Flex color='whiteAlpha.900' flexDirection='column' marginLeft='15px'>
+            <Flex color='whiteAlpha.900' flexDirection='column'>
               {
                 isEditing
                   ?
@@ -178,7 +178,7 @@ function Profile() {
             </Flex>
           </Flex>
           <Flex margin='auto'>
-            <Card variant='filled' bgColor='#3f3f3f' color='white' width='50vw' maxWidth='650px' id='about-me'>
+            <Card variant='filled' marginTop='25px' bgColor='#3f3f3f' color='white' width='50vw' maxWidth='650px' id='about-me'>
               <CardHeader>
                 <Heading size='sm'>Sobre mim</Heading>
               </CardHeader>
