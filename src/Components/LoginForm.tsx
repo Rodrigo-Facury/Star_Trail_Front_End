@@ -2,9 +2,13 @@ import {
   Alert,
   AlertIcon,
   Button,
+  Flex,
   FormControl,
   FormHelperText,
-  Input
+  Input,
+  ListItem,
+  Text,
+  UnorderedList
 } from '@chakra-ui/react'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -16,6 +20,15 @@ interface LoginInfo {
   password: string
 }
 
+interface IErrors {
+  emailOrUsername?: {
+    type?: string
+  }
+  password?: {
+    type?: string
+  }
+}
+
 function LoginForm() {
   const navigate = useNavigate()
   const [loginInfo, setLoginInfo] = useState<LoginInfo>({
@@ -23,8 +36,44 @@ function LoginForm() {
     password: ''
   })
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const [errors, setErrors] = useState<IErrors>({})
 
   const handleSubmit = () => {
+    if (!loginInfo.emailOrUsername) {
+      setErrors((prev) => ({ ...prev, emailOrUsername: { type: 'required' } }))
+
+      return;
+    }
+
+    const usernameRegex = /^[a-z0-9_-]{3,15}$/
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+
+    const validEmailOrUsername = usernameRegex.test(loginInfo.emailOrUsername) || emailRegex.test(loginInfo.emailOrUsername)
+
+    if (!validEmailOrUsername) {
+      setErrors((prev) => ({ ...prev, emailOrUsername: { type: 'pattern' } }))
+
+      return;
+    }
+
+    if (!loginInfo.password) {
+      setErrors((prev) => ({ ...prev, password: { type: 'required' } }))
+
+      return;
+    }
+
+    const passwordRegex = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$/
+
+    const validPassword = passwordRegex.test(loginInfo.password)
+
+    if (!validPassword) {
+      setErrors((prev) => ({ ...prev, password: { type: 'pattern' } }))
+
+      return;
+    }
+
     fetch(`${typeof import.meta.env.VITE_API_BASE_URL === 'string' ? import.meta.env.VITE_API_BASE_URL : ''}/user/login`, {
       method: 'POST',
       headers: {
@@ -56,10 +105,22 @@ function LoginForm() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
+
+    if (name === 'emailOrUsername') {
+      setErrors({})
+
+      return setLoginInfo((prevInfo) => ({
+        ...prevInfo,
+        [name]: value.toLowerCase(),
+      }))
+    }
+
     setLoginInfo((prevInfo) => ({
       ...prevInfo,
       [name]: value
     }))
+
+    setErrors({})
   }
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -95,6 +156,15 @@ function LoginForm() {
         onChange={handleChange}
         onKeyUp={handleKeyPress}
       />
+      {errors?.emailOrUsername && <Flex flexDirection='column'>
+        <Text color='red.300' fontSize='12px' textAlign='left' marginBottom='5px'>
+          Digite um e-mail válido ou um username no seguinte formato:
+        </Text>
+        <UnorderedList marginBottom='20px' color='red.300' textAlign='left' fontSize='12px'>
+          <ListItem>Deve conter apenas letras minúsculas (a-z), números (0-9), hífens (-) e underscores (_).</ListItem>
+          <ListItem>Deve ter de 2 a 15 caracteres.</ListItem>
+        </UnorderedList>
+      </Flex>}
       <PasswordInput
         value={loginInfo.password}
         placeholder='Senha'
@@ -102,6 +172,13 @@ function LoginForm() {
         onChange={handleChange}
         onKeyUp={handleKeyPress}
       />
+      {errors?.password && <UnorderedList marginTop='15px' color='red.300' textAlign='left' fontSize='12px'>
+        <ListItem>Deve conter pelo menos 8 caracteres.</ListItem>
+        <ListItem>Deve conter pelo menos 1 letra maiúscula (A-Z).</ListItem>
+        <ListItem>Deve conter pelo menos 1 letra minúscula (a-z).</ListItem>
+        <ListItem>Deve conter pelo menos 1 número (0-9).</ListItem>
+        <ListItem>Deve conter pelo menos 1 caractere especial (#?!@$ %^&*-).</ListItem>
+      </UnorderedList>}
       <FormHelperText
         onClick={() => navigate('/recover-password')}
         color={'white'}

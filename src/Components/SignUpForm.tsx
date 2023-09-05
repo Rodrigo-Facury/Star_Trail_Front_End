@@ -1,4 +1,4 @@
-import { Button, FormControl, Input, FormErrorMessage, Alert, AlertIcon } from '@chakra-ui/react'
+import { Button, FormControl, Input, FormErrorMessage, Alert, AlertIcon, UnorderedList, ListItem, Text } from '@chakra-ui/react'
 import PasswordInput from './PasswordInput'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -13,6 +13,24 @@ interface UserInfo {
   username: string
 }
 
+interface IErrors {
+  firstName?: {
+    type?: string
+  }
+  lastName?: {
+    type?: string
+  }
+  username?: {
+    type?: string
+  }
+  email?: {
+    type?: string
+  }
+  password?: {
+    type?: string
+  }
+}
+
 function SignUpForm() {
   const [userInfo, setUserInfo] = useState<UserInfo>({
     email: '',
@@ -24,8 +42,8 @@ function SignUpForm() {
   })
 
   const [passwordsMatch, setPasswordsMatch] = useState(true)
-  const [allFieldsFilled, setAllFieldsFilled] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const [errors, setErrors] = useState<IErrors>({})
   const navigate = useNavigate()
 
   const handlePasswordChange = (password: string, confirmPassword: string | undefined) => {
@@ -34,6 +52,16 @@ function SignUpForm() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
+
+    if (name === 'username') {
+      setErrors({})
+
+      return setUserInfo((prevInfo) => ({
+        ...prevInfo,
+        [name]: value.toLowerCase(),
+      }))
+    }
+
     setUserInfo((prevInfo) => ({
       ...prevInfo,
       [name]: value,
@@ -43,28 +71,89 @@ function SignUpForm() {
       handlePasswordChange(value, name === 'confirmPassword' ? userInfo.password : userInfo.confirmPassword)
     }
 
-    const areAllFieldsFilled =
-      userInfo.firstName !== '' &&
-      userInfo.lastName !== '' &&
-      userInfo.username !== '' &&
-      userInfo.email !== '' &&
-      userInfo.password !== '' &&
-      userInfo.confirmPassword !== ''
-
-    setAllFieldsFilled(areAllFieldsFilled)
+    setErrors({})
   }
 
   const handleSubmit = () => {
+    if (!userInfo.firstName) {
+      setErrors((prev) => ({ ...prev, firstName: { type: 'required' } }))
+
+      return;
+    }
+
+    const nameRegex = /^[A-Za-zÀ-ÿ]{2,30}$/
+
+    const validFirstName = nameRegex.test(userInfo.firstName)
+
+    if (!validFirstName) {
+      setErrors((prev) => ({ ...prev, firstName: { type: 'pattern' } }))
+
+      return;
+    }
+
+    if (!userInfo.lastName) {
+      setErrors((prev) => ({ ...prev, lastName: { type: 'required' } }))
+
+      return;
+    }
+
+    const validLastName = nameRegex.test(userInfo.lastName)
+
+    if (!validLastName) {
+      setErrors((prev) => ({ ...prev, lastName: { type: 'pattern' } }))
+
+      return;
+    }
+
+    if (!userInfo.username) {
+      setErrors((prev) => ({ ...prev, username: { type: 'required' } }))
+
+      return;
+    }
+
+    const usernameRegex = /^[a-z0-9_-]{3,15}$/
+
+    const validUsername = usernameRegex.test(userInfo.username)
+
+    if (!validUsername) {
+      setErrors((prev) => ({ ...prev, username: { type: 'pattern' } }))
+
+      return;
+    }
+
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+    if (!userInfo.email) {
+      setErrors((prev) => ({ ...prev, email: { type: 'required' } }))
+
+      return;
+    }
+
+    const validEmail = emailRegex.test(userInfo.email)
+
+    if (!validEmail) {
+      setErrors((prev) => ({ ...prev, email: { type: 'pattern' } }))
+
+      return;
+    }
+
+    if (!userInfo.password) {
+      setErrors((prev) => ({ ...prev, password: { type: 'required' } }))
+
+      return;
+    }
+
     const passwordRegex = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$/
 
-    if (!passwordRegex.test(userInfo.password)) {
-      setErrorMessage('Senha em formato incorreto')
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 2000)
+    const validPassword = passwordRegex.test(userInfo.password)
 
-      return
+    if (!validPassword) {
+      setErrors((prev) => ({ ...prev, password: { type: 'pattern' } }))
+
+      return;
     }
+
 
     if (userInfo.password !== userInfo.confirmPassword) {
       setPasswordsMatch(false)
@@ -136,6 +225,10 @@ function SignUpForm() {
           marginBottom: '15px',
         }}
       />
+      {errors?.firstName && <UnorderedList marginBottom='20px' color='red.300' textAlign='left' fontSize='12px'>
+        <ListItem>Deve conter apenas letras maiúsculas (A-Z) e minúsculas (a-z), incluindo caracteres acentuados.</ListItem>
+        <ListItem>Deve ter de 2 a 30 caracteres.</ListItem>
+      </UnorderedList>}
       <Input
         type='text'
         name='lastName'
@@ -154,6 +247,10 @@ function SignUpForm() {
           marginBottom: '15px',
         }}
       />
+      {errors?.lastName && <UnorderedList marginBottom='20px' color='red.300' textAlign='left' fontSize='12px'>
+        <ListItem>Deve conter apenas letras maiúsculas (A-Z) e minúsculas (a-z), incluindo caracteres acentuados.</ListItem>
+        <ListItem>Deve ter de 2 a 30 caracteres.</ListItem>
+      </UnorderedList>}
       <Input
         type='text'
         name='username'
@@ -179,6 +276,10 @@ function SignUpForm() {
           marginBottom: '15px',
         }}
       />
+      {errors?.username && <UnorderedList marginBottom='20px' color='red.300' textAlign='left' fontSize='12px'>
+        <ListItem>Deve conter apenas letras minúsculas (a-z), números (0-9), hífens (-) e underscores (_).</ListItem>
+        <ListItem>Deve ter de 2 a 15 caracteres.</ListItem>
+      </UnorderedList>}
       <Input
         type='email'
         name='email'
@@ -197,6 +298,9 @@ function SignUpForm() {
           marginBottom: '15px',
         }}
       />
+      {errors?.email && <Text color='red.300' fontSize='12px' textAlign='left' marginBottom='20px'>
+        Digite um e-mail válido
+      </Text>}
       <PasswordInput
         placeholder='Senha'
         name='password'
@@ -212,6 +316,13 @@ function SignUpForm() {
         onKeyUp={handleKeyPress}
         sx={{ marginBottom: '15px' }}
       />
+      {errors?.password && <UnorderedList marginBottom='20px' color='red.300' textAlign='left' fontSize='12px'>
+        <ListItem>Deve conter pelo menos 8 caracteres.</ListItem>
+        <ListItem>Deve conter pelo menos 1 letra maiúscula (A-Z).</ListItem>
+        <ListItem>Deve conter pelo menos 1 letra minúscula (a-z).</ListItem>
+        <ListItem>Deve conter pelo menos 1 número (0-9).</ListItem>
+        <ListItem>Deve conter pelo menos 1 caractere especial (#?!@$ %^&*-).</ListItem>
+      </UnorderedList>}
       <FormControl isInvalid={!passwordsMatch}>
         <PasswordInput
           placeholder='Confirmar Senha'
@@ -241,7 +352,6 @@ function SignUpForm() {
           fontFamily: 'Abhaya Libre, serif',
           marginTop: '35px',
         }}
-        isDisabled={!passwordsMatch || !allFieldsFilled}
       >
         Cadastrar
       </Button>
