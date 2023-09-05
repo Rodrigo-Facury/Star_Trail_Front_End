@@ -26,7 +26,7 @@
   font-size: 25px;
 }
 
-@media only screen and (max-width: 414px) {
+@media only screen and (max-width: 500px) {
   #login-page {
     margin: 0px;
     background-color: #1E1E1E;

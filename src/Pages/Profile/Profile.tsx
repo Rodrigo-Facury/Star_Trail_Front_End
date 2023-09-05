@@ -21,14 +21,17 @@ function Profile() {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const token: string | number | boolean | object | null = secureLocalStorage.getItem('st_token')
 
+
   useEffect(() => {
-    if (token && typeof token === 'string') {
+    if (token && typeof token === 'string' && reload) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
       const tokenUser: User = jwtDecode(token)
 
       setMe(tokenUser)
     }
-  }, [setMe, token])
+
+    setReload(false)
+  }, [setMe, token, user, reload])
 
   useEffect(() => {
     if (username && reload) {
@@ -42,7 +45,7 @@ function Profile() {
 
       setReload(false)
     }
-  }, [username, reload])
+  }, [username, reload, me])
 
   const handleEditToggle = () => {
     setIsEditing(!isEditing)
@@ -87,17 +90,72 @@ function Profile() {
             if (res.ok) {
               console.log('Usuário editado com sucesso!')
 
-              // TODO: trazer novo token
-              setReload(true)
+              return res.json()
             } else {
               console.log('Erro ao editar usuário')
             }
+          })
+          .then(({ newToken }: { newToken: string }) => {
+            secureLocalStorage.setItem('st_token', newToken)
+            setReload(true)
           })
           .catch((err) => console.error(err))
       }
     }
 
     setIsEditing(false)
+  }
+
+  function follow() {
+    if (typeof token === 'string' && typeof import.meta.env.VITE_API_BASE_URL === 'string' && user) {
+      fetch(`${import.meta.env.VITE_API_BASE_URL}/user/follow/${user.id}`, {
+        method: 'POST',
+        headers: {
+          Authorization: token,
+        }
+      })
+        .then((res) => {
+          if (res.ok) {
+            console.log('Usuário seguido com sucesso!')
+
+            return res.json()
+          } else {
+            console.log('Erro ao seguir usuário')
+          }
+        })
+        .then((data: { newToken: string }) => {
+          secureLocalStorage.setItem('st_token', data.newToken)
+
+          setReload(true)
+        })
+        .catch((err) => console.error(err))
+    }
+  }
+
+  function unfollow() {
+    if (typeof token === 'string' && typeof import.meta.env.VITE_API_BASE_URL === 'string' && user) {
+      fetch(`${import.meta.env.VITE_API_BASE_URL}/user/unfollow/${user.id}`, {
+        method: 'POST',
+        headers: {
+          Authorization: token,
+        }
+      })
+        .then((res) => {
+          if (res.ok) {
+            console.log('Seguida removida com sucesso!')
+
+            return res.json()
+          } else {
+            console.log('Erro ao remover seguida usuário')
+          }
+        })
+        .then((data: { newToken: string }) => {
+          secureLocalStorage.setItem('st_token', data.newToken)
+
+          setReload(true)
+        })
+        .catch((err) => console.error(err))
+    }
   }
 
   return (
@@ -111,18 +169,18 @@ function Profile() {
             {
               isEditing
                 ?
-                <FormLabel htmlFor="profile-picture-input">
+                <FormLabel htmlFor='profile-picture-input'>
                   <Image
                     src={newProfilePicture ? URL.createObjectURL(newProfilePicture) : user.profilePicturePath}
-                    objectFit="cover"
-                    boxSize="150px"
-                    borderRadius="50%"
-                    cursor="pointer"
+                    objectFit='cover'
+                    boxSize='150px'
+                    borderRadius='50%'
+                    cursor='pointer'
                   />
                   <Input
-                    id="profile-picture-input"
-                    type="file"
-                    accept="image/*"
+                    id='profile-picture-input'
+                    type='file'
+                    accept='image/*'
                     style={{ display: 'none' }}
                     onChange={handleProfilePictureChange}
                   />
@@ -130,9 +188,9 @@ function Profile() {
                 :
                 <Image
                   src={user.profilePicturePath}
-                  objectFit="cover"
-                  boxSize="150px"
-                  borderRadius="50%"
+                  objectFit='cover'
+                  boxSize='150px'
+                  borderRadius='50%'
                 />
             }
             <Flex color='whiteAlpha.900' flexDirection='column'>
@@ -167,13 +225,21 @@ function Profile() {
                     :
                     <Button marginTop='15px' colorScheme='purple' onClick={handleEditToggle}>Editar</Button>
                   :
-                  <Button marginTop='15px' colorScheme='whatsapp' onClick={handleEditToggle}>
-                    <span className="material-symbols-outlined">
-                      person_add
-                    </span>
-                    <Text marginLeft='5px'>Seguir</Text>
-                  </Button>
-                  // TODO: lógica de seguir e deixar de seguir
+                  me?.peopleIFollow?.includes(user.id)
+                    ?
+                    <Button marginTop='15px' colorScheme='purple' onClick={unfollow}>
+                      <span className="material-symbols-outlined">
+                        person_remove
+                      </span>
+                      <Text marginLeft='5px'>Deixar de seguir</Text>
+                    </Button>
+                    :
+                    <Button marginTop='15px' colorScheme='whatsapp' onClick={follow}>
+                      <span className='material-symbols-outlined'>
+                        person_add
+                      </span>
+                      <Text marginLeft='5px'>Seguir</Text>
+                    </Button>
               }
             </Flex>
           </Flex>
