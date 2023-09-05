@@ -94,7 +94,7 @@ function LoginForm() {
           })
         }
       })
-      .then((data: { token: string }) => {
+      .then((data: { token: string, peopleIFollow: number[] }) => {
         secureLocalStorage.setItem('st_token', data.token)
         navigate('/')
       })

@@ -6,6 +6,7 @@ export type User = {
   profilePicturePath: string
   aboutMe?: string
   level: number
+  peopleIFollow?: number[]
 }
 
 export type Step = {
