@@ -28,7 +28,7 @@
   align-items: center;
 }
 
-@ screen and (max-width: 500px) {
+@media only screen and (max-width: 500px) {
   .star-trail-logo h1 {
     font-size: 20px;
   }
