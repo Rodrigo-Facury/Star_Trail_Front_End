@@ -35,18 +35,32 @@ function Profile() {
   }, [setMe, token, user, reload])
 
   useEffect(() => {
-    if (username && reload) {
-      fetch(`${typeof import.meta.env.VITE_API_BASE_URL === 'string' ? import.meta.env.VITE_API_BASE_URL : ''}/user/username/${username}`)
+    if (username) {
+      fetch(`${typeof import.meta.env.VITE_API_BASE_URL === 'string' ? import.meta.env.VITE_API_BASE_URL : ''}/user/username-exact/${username}`)
         .then((res) => res.json())
-        .then(({ users }: { users: User[] }) => {
-          setUser(users[0])
-          setEditedUser(users[0])
+        .then(({ user: resUser }: { user: User }) => {
+          setUser(resUser)
+          setEditedUser(resUser)
         })
         .catch((err) => console.error(err))
+    }
 
+    if (reload) {
       setReload(false)
     }
   }, [username, reload, me])
+
+  useEffect(() => {
+    if (username) {
+      fetch(`${typeof import.meta.env.VITE_API_BASE_URL === 'string' ? import.meta.env.VITE_API_BASE_URL : ''}/user/username-exact/${username}`)
+        .then((res) => res.json())
+        .then(({ user: resUser }: { user: User }) => {
+          setUser(resUser)
+          setEditedUser(resUser)
+        })
+        .catch((err) => console.error(err))
+    }
+  }, [username])
 
   const handleEditToggle = () => {
     setIsEditing(!isEditing)
