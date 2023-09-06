@@ -8,6 +8,7 @@ import { Flex, Heading, Image, Text, Button, Input, FormLabel, Card, CardHeader,
 import secureLocalStorage from 'react-secure-storage'
 import jwtDecode from 'jwt-decode'
 import { EditIcon } from '@chakra-ui/icons'
+import { statusIcons } from '../../helpers/statusIcons'
 
 function Profile() {
   const [user, setUser] = useState<User | undefined>()
@@ -210,7 +211,7 @@ function Profile() {
                   :
                   <Heading fontSize='3xl' marginTop='8px'>{user.firstName} {user.lastName}</Heading>
               }
-              <Text fontSize='20px'>{user.username}</Text>
+              <Text fontSize='20px'>{user.username} <span>{statusIcons[user.level]}</span></Text>
               {
                 user.username === me?.username
                   ?
