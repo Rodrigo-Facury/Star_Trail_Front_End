@@ -6,7 +6,7 @@ import { Topic, Trail, User } from '../../types'
 import { Box, Button, Container, Flex, Icon, Image, Input, InputGroup, InputLeftElement, Menu, MenuButton, MenuItem, MenuList, Popover, PopoverArrow, PopoverBody, PopoverContent, PopoverTrigger, Radio, RadioGroup, Stack, Text } from '@chakra-ui/react'
 import { useNavigate } from 'react-router-dom'
 import { statusIcons } from '../helpers/statusIcons'
-import { AddIcon, SearchIcon } from '@chakra-ui/icons'
+import { AddIcon, BellIcon, SearchIcon } from '@chakra-ui/icons'
 import logo from '../assets/star.png'
 
 function StarTrailHeader() {
@@ -16,19 +16,19 @@ function StarTrailHeader() {
   const [topics, setTopics] = useState<Topic[] | undefined>()
   const [searchEntity, setSearchEntity] = useState<string>('people')
   const [searchString, setSearchString] = useState<string>('')
+  const [notifications, setNotifications] = useState<{ message: string, createdAt: string }[] | undefined>()
   const navigate = useNavigate()
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const token: string | number | boolean | object | null = secureLocalStorage.getItem('st_token')
 
   useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const token: string | number | boolean | object | null = secureLocalStorage.getItem('st_token')
-
     if (token && typeof token === 'string') {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
       const tokenUser: User = jwtDecode(token)
 
       setUser(tokenUser)
     }
-  }, [setUser])
+  }, [setUser, token])
 
   const handleLogout = () => {
     secureLocalStorage.removeItem('st_token')
@@ -83,6 +83,30 @@ function StarTrailHeader() {
         .catch((err) => {
           console.log(err)
         })
+    }
+  }
+
+  function getNotifications() {
+    if (typeof token === 'string' && typeof import.meta.env.VITE_API_BASE_URL === 'string' && user) {
+      fetch(`${import.meta.env.VITE_API_BASE_URL}/user/notifications`, {
+        method: 'GET',
+        headers: {
+          Authorization: token,
+        }
+      })
+        .then((res) => {
+          if (res.ok) {
+            console.log('Notificações recuperadas com sucesso!')
+
+            return res.json()
+          } else {
+            console.log('Erro ao recuperar notificações')
+          }
+        })
+        .then((data: { notifications: { message: string, createdAt: string }[] }) => {
+          setNotifications(data.notifications)
+        })
+        .catch((err) => console.error(err))
     }
   }
 
@@ -249,6 +273,27 @@ function StarTrailHeader() {
             <Button colorScheme='teal' variant='outline' padding='15px' onClick={() => navigate('/login')}>
               Login
             </Button>
+        }
+        {
+          user
+          &&
+          <Popover>
+            <PopoverTrigger>
+              <Flex alignItems='center' marginLeft='15px' cursor='pointer' onClick={getNotifications}>
+                <BellIcon color='gray.400' boxSize='25px' />
+              </Flex>
+            </PopoverTrigger>
+            <PopoverContent>
+              <PopoverArrow />
+              <PopoverBody backgroundColor='blackAlpha.800'>
+                {
+                  notifications?.map(({message}) => (
+                    <Text color='white'>{ message }</Text>
+                  ))
+                }
+              </PopoverBody>
+            </PopoverContent>
+          </Popover>
         }
       </Flex>
     </header>
