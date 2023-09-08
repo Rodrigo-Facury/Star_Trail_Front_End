@@ -13,16 +13,18 @@ type TrailCardProps = {
   title: string
   topics: { name: string }[]
   creator: User
-  trails: Trail[]
+  trails?: Trail[]
+  trail?: Trail
   stars: number
   steps: Step[]
   peopleWhoStarred: number[],
   id: string
   trailId: number
-  setTrails: Dispatch<SetStateAction<Trail[]>>
+  setTrails?: Dispatch<SetStateAction<Trail[]>>
+  setTrail?: Dispatch<SetStateAction<Trail | undefined>>
 }
 
-function TrailCard({ title, topics, creator, trails, stars, steps, peopleWhoStarred, id, trailId, setTrails }: TrailCardProps) {
+function TrailCard({ title, topics, creator, trails, stars, steps, peopleWhoStarred, id, trailId, setTrails, trail, setTrail }: TrailCardProps) {
   const [expanded, setExpanded] = useState<boolean>(false)
   const [user, setUser] = useState<User | undefined>()
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -73,7 +75,7 @@ function TrailCard({ title, topics, creator, trails, stars, steps, peopleWhoStar
       },
     })
       .then((res) => {
-        if (res.ok) {
+        if (res.ok && trails && setTrails) {
           console.log('Trilha deletada com sucesso!')
           const updatedTrails = trails.filter((trail) => trail.id !== trailId)
 
@@ -101,26 +103,42 @@ function TrailCard({ title, topics, creator, trails, stars, steps, peopleWhoStar
     })
       .then((res) => {
         if (res.ok && user) {
-          const updatedTrails = trails.map(trail => {
-            if (trail.id === trailId) {
-              return {
-                ...trail,
-                starsCount: trail.stars.map(({ userId }) => userId).includes(user.id)
-                  ?
-                  Number(trail.starsCount) - 1
-                  :
-                  Number(trail.starsCount) + 1,
-                stars: trail.stars.map(({ userId }) => userId).includes(user.id)
-                  ?
-                  trail.stars.filter((star) => star.userId !== user.id)
-                  :
-                  [...trail.stars, { userId: user.id }],
-              };
-            }
-            return trail;
-          });
+          if (trails && setTrails) {
+            const updatedTrails = trails.map(trail => {
+              if (trail.id === trailId) {
+                return {
+                  ...trail,
+                  starsCount: trail.stars.map(({ userId }) => userId).includes(user.id)
+                    ?
+                    Number(trail.starsCount) - 1
+                    :
+                    Number(trail.starsCount) + 1,
+                  stars: trail.stars.map(({ userId }) => userId).includes(user.id)
+                    ?
+                    trail.stars.filter((star) => star.userId !== user.id)
+                    :
+                    [...trail.stars, { userId: user.id }],
+                }
+              }
+              return trail
+            })
 
-          setTrails(updatedTrails);
+            setTrails(updatedTrails)
+          } else if (trail && setTrail) {
+            setTrail({
+              ...trail,
+              starsCount: trail.stars.map(({ userId }) => userId).includes(user.id)
+                ?
+                Number(trail.starsCount) - 1
+                :
+                Number(trail.starsCount) + 1,
+              stars: trail.stars.map(({ userId }) => userId).includes(user.id)
+                ?
+                trail.stars.filter((star) => star.userId !== user.id)
+                :
+                [...trail.stars, { userId: user.id }],
+            })
+          }
         } else {
           console.log(res)
         }
