@@ -17,6 +17,12 @@ export type Step = {
   updatedAt: string
 }
 
+export type Topic = {
+  id?: number
+  name: string
+  trailCount?: number
+}
+
 export type Trail = {
   id: number
   title: string
@@ -26,7 +32,7 @@ export type Trail = {
   steps: Step[]
   creator: User
   starsCount: number
-  Topics: { name: string }[]
+  Topics: Topic[]
   stars: { userId: number }[]
 }
 
