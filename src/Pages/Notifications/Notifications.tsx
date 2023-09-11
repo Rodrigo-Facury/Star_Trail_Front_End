@@ -19,7 +19,6 @@ function Notifications() {
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const token: string | number | boolean | object | null = secureLocalStorage.getItem('st_token')
-
   const navigate = useNavigate()
 
   useEffect(() => {
