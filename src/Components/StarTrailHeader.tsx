@@ -60,6 +60,12 @@ function StarTrailHeader() {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
       const tokenUser: User = jwtDecode(token)
 
+      if (tokenUser.exp && tokenUser.exp * 1000 < Date.now()) {
+        secureLocalStorage.removeItem('st_token')
+
+        return
+      }
+
       setUser(tokenUser)
     }
   }, [setUser, token])
@@ -309,6 +315,8 @@ function StarTrailHeader() {
                   &&
                   <Text
                     bgColor='red'
+                    color='white'
+                    fontWeight='600'
                     fontSize='12px'
                     borderRadius='2px'
                     padding='2px'
@@ -354,7 +362,7 @@ function StarTrailHeader() {
                           navigate(goto)
                         }
 
-                        
+
                       }}
                     >
                       <Text color='whatsapp.500' fontSize='12px' alignSelf='flex-end' margin='5px 0px'>{parseDate(createdAt)}</Text>

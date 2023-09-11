@@ -42,7 +42,7 @@ services:
       - DATABASE_PORT=${DATABASE_PORT}
       - SECRET=${SECRET}
     volumes:
-      - uploads:/../back/public/uploads
+      - ../back/public/uploads:/public/uploads
       - ../front/certbot/www:/var/www/certbot/:ro
       - ../front/certbot/conf/:/etc/ssl/:ro
     depends_on:
@@ -64,4 +64,3 @@ services:
       - POSTGRES_PASSWORD=${PASSWORD}
 volumes:
   database:
-  uploads:

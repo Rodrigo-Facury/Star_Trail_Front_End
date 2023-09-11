@@ -7,6 +7,7 @@ export type User = {
   aboutMe?: string
   level: number
   peopleIFollow?: number[]
+  exp?: number
 }
 
 export type Step = {
