@@ -13,6 +13,7 @@ import {
   Input,
   InputGroup,
   InputLeftElement,
+  Link,
   Menu,
   MenuButton,
   MenuItem,
@@ -333,7 +334,7 @@ function StarTrailHeader() {
               <PopoverArrow />
               <PopoverBody backgroundColor='blackAlpha.800' padding='0px'>
                 {
-                  notifications?.map(({ id, message, createdAt, seen, goto }) => (
+                  notifications?.slice(0, 4).map(({ id, message, createdAt, seen, goto }) => (
                     <Flex
                       key={id}
                       direction='column'
@@ -370,6 +371,9 @@ function StarTrailHeader() {
                     </Flex>
                   ))
                 }
+                <Flex width='100%' justifyContent='center' padding='5px' cursor='pointer' onClick={() => navigate('/notifications')}>
+                  <Text color='whatsapp.500' textAlign='center'>Ver todas</Text>
+                </Flex>
               </PopoverBody>
             </PopoverContent>
           </Popover>
