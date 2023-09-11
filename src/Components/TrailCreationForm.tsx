@@ -154,7 +154,7 @@ function TrailCreationForm({ trailId }: TrailCreationFormProps) {
   }, [trailId])
 
   return (
-    <Container maxWidth='55%'>
+    <Container id='trail-creation-form-container' maxWidth='55%'>
       <Box mt={6}>
         <FormControl mb={4}>
           <FormLabel>Title</FormLabel>
