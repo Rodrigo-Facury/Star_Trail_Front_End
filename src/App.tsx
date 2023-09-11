@@ -4,12 +4,14 @@ import Feed from './Pages/Feed/Feed'
 import CreateTrail from './Pages/CreateTrail/CreateTrail'
 import EditTrail from './Pages/EditTrail/EditTrail'
 import Profile from './Pages/Profile/Profile'
+import Notifications from './Pages/Notifications/Notifications'
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path='/login' element={<Login />} />
+        <Route path='/notifications' element={<Notifications />} />
         <Route path='/create-trail' element={<CreateTrail />} />
         <Route path='/edit-trail/:trailId' element={<EditTrail />} />
         <Route path='/profile/:username' element={<Profile />} />
