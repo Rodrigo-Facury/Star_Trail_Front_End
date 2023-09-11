@@ -35,6 +35,10 @@
     justify-content: center;
   }
 
+  #menu-button {
+    margin: 0px !important;
+  }
+
   #font-logo {
     display: none;
   }
@@ -52,8 +56,7 @@
     border-radius: 50% !important;
     width: 30px !important;
     border: none !important;
-    margin-left: 5px;
-    background-color: rgba(0, 128, 128, 0.449) !important;
+    background-color: #F4F6FC !important;
   }
 
   .css-xl71ch {

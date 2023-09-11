@@ -1,13 +1,41 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import jwtDecode from 'jwt-decode'
 import './StarTrailHeader.css'
 import secureLocalStorage from 'react-secure-storage'
 import { Topic, Trail, User } from '../../types'
-import { Box, Button, Container, Flex, Icon, Image, Input, InputGroup, InputLeftElement, Menu, MenuButton, MenuItem, MenuList, Popover, PopoverArrow, PopoverBody, PopoverContent, PopoverTrigger, Radio, RadioGroup, Stack, Text } from '@chakra-ui/react'
+import {
+  Box,
+  Button,
+  Container,
+  Flex,
+  Icon,
+  Image,
+  Input,
+  InputGroup,
+  InputLeftElement,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  Popover,
+  PopoverArrow,
+  PopoverBody,
+  PopoverContent,
+  PopoverTrigger,
+  Radio,
+  RadioGroup,
+  Stack,
+  Text
+} from '@chakra-ui/react'
 import { useNavigate } from 'react-router-dom'
 import { statusIcons } from '../helpers/statusIcons'
-import { AddIcon, BellIcon, SearchIcon } from '@chakra-ui/icons'
+import {
+  AddIcon,
+  BellIcon,
+  SearchIcon
+} from '@chakra-ui/icons'
 import logo from '../assets/star.png'
+import parseDate from '../helpers/parseDate'
 
 function StarTrailHeader() {
   const [user, setUser] = useState<User | undefined>()
@@ -16,7 +44,13 @@ function StarTrailHeader() {
   const [topics, setTopics] = useState<Topic[] | undefined>()
   const [searchEntity, setSearchEntity] = useState<string>('people')
   const [searchString, setSearchString] = useState<string>('')
-  const [notifications, setNotifications] = useState<{ message: string, createdAt: string }[] | undefined>()
+  const [notifications, setNotifications] = useState<{
+    id: string,
+    message: string,
+    createdAt: string,
+    seen: boolean,
+    goto?: string
+  }[] | undefined>()
   const navigate = useNavigate()
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const token: string | number | boolean | object | null = secureLocalStorage.getItem('st_token')
@@ -103,12 +137,26 @@ function StarTrailHeader() {
             console.log('Erro ao recuperar notificações')
           }
         })
-        .then((data: { notifications: { message: string, createdAt: string }[] }) => {
+        .then((data: {
+          notifications: {
+            id: string,
+            message: string,
+            createdAt: string,
+            seen: boolean,
+            goto?: string
+          }[]
+        }) => {
           setNotifications(data.notifications)
         })
         .catch((err) => console.error(err))
     }
   }
+
+  const notificationsCallback = useCallback(getNotifications, [token, user])
+
+  useEffect(() => {
+    notificationsCallback()
+  }, [notificationsCallback])
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target
@@ -135,8 +183,8 @@ function StarTrailHeader() {
       <Flex margin='0px' width='fit-content' padding='0px'>
         <Popover>
           <PopoverTrigger>
-            <Flex alignItems='center' marginRight='15px' cursor='pointer'>
-              <SearchIcon color='gray.400' boxSize='25px' />
+            <Flex alignItems='center' marginRight='20px' cursor='pointer'>
+              <SearchIcon color='gray.400' fontSize='30px' />
             </Flex>
           </PopoverTrigger>
           <PopoverContent>
@@ -251,6 +299,75 @@ function StarTrailHeader() {
         </Button>
         {
           user
+          &&
+          <Popover>
+            <PopoverTrigger>
+              <Flex alignItems='center' marginRight='15px' boxSize='40px' cursor='pointer' onClick={getNotifications}>
+                <BellIcon color='gray.400' fontSize='40px' />
+                {
+                  notifications && notifications?.filter(({ seen }) => !seen).length > 0
+                  &&
+                  <Text
+                    bgColor='red'
+                    fontSize='12px'
+                    borderRadius='2px'
+                    padding='2px'
+                    position='relative'
+                    right='16px'
+                    bottom='10px'
+                  >
+                    {notifications?.filter(({ seen }) => !seen).length}
+                  </Text>
+                }
+              </Flex>
+            </PopoverTrigger>
+            <PopoverContent>
+              <PopoverArrow />
+              <PopoverBody backgroundColor='blackAlpha.800' padding='0px'>
+                {
+                  notifications?.map(({ id, message, createdAt, seen, goto }) => (
+                    <Flex
+                      key={id}
+                      direction='column'
+                      cursor='pointer'
+                      padding='10px'
+                      bgColor={seen ? 'transparent' : 'teal.900'}
+                      onClick={() => {
+                        if (token && typeof token === 'string') {
+                          fetch(`${typeof import.meta.env.VITE_API_BASE_URL === 'string' ? import.meta.env.VITE_API_BASE_URL : ''}/user/see-notification/${id}`, {
+                            method: 'PUT',
+                            headers: {
+                              Authorization: token
+                            }
+                          })
+                            .then((res) => {
+                              if (res.ok) {
+                                getNotifications()
+                              }
+                            })
+                            .catch((err) => {
+                              console.log(err)
+                            })
+                        }
+
+                        if (goto) {
+                          navigate(goto)
+                        }
+
+                        
+                      }}
+                    >
+                      <Text color='whatsapp.500' fontSize='12px' alignSelf='flex-end' margin='5px 0px'>{parseDate(createdAt)}</Text>
+                      <Text color='white'>{message}</Text>
+                    </Flex>
+                  ))
+                }
+              </PopoverBody>
+            </PopoverContent>
+          </Popover>
+        }
+        {
+          user
             ?
             <Menu>
               <MenuButton className='avatar-container' as={Button} colorScheme='teal' variant='outline' padding='20px 15px'>
@@ -273,27 +390,6 @@ function StarTrailHeader() {
             <Button colorScheme='teal' variant='outline' padding='15px' onClick={() => navigate('/login')}>
               Login
             </Button>
-        }
-        {
-          user
-          &&
-          <Popover>
-            <PopoverTrigger>
-              <Flex alignItems='center' marginLeft='15px' cursor='pointer' onClick={getNotifications}>
-                <BellIcon color='gray.400' boxSize='25px' />
-              </Flex>
-            </PopoverTrigger>
-            <PopoverContent>
-              <PopoverArrow />
-              <PopoverBody backgroundColor='blackAlpha.800'>
-                {
-                  notifications?.map(({message}) => (
-                    <Text color='white'>{ message }</Text>
-                  ))
-                }
-              </PopoverBody>
-            </PopoverContent>
-          </Popover>
         }
       </Flex>
     </header>
