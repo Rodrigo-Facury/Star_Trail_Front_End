@@ -219,7 +219,7 @@ function Profile() {
                     </FormLabel>
                     <FormLabel htmlFor='lastName'>
                       Sobrenome
-                      <Input id='lastname' name='lastname' value={editedUser?.lastName} onChange={handleInputChange} />
+                      <Input id='lastName' name='lastName' value={editedUser?.lastName} onChange={handleInputChange} />
                     </FormLabel>
                   </Flex>
                   :
