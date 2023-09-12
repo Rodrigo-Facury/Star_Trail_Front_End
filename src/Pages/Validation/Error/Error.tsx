@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom'
 function Error() {
   const [email, setEmail] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
+  const [successMessage, setSuccessMessage] = useState('')
 
   const navigate = useNavigate()
 
@@ -14,6 +15,12 @@ function Error() {
     fetch(`${typeof import.meta.env.VITE_API_BASE_URL === 'string' ? import.meta.env.VITE_API_BASE_URL : ''}/resend-validation-email/${email}`)
       .then((res) => {
         if (res.ok) {
+          setSuccessMessage('E-mail reenviado com sucesso!')
+
+          setTimeout(() => {
+            setSuccessMessage('')
+          }, 3000)
+
           return res.json()
         } else {
           setErrorMessage('Erro ao reenviar e-mail de confirmação')
@@ -80,6 +87,12 @@ function Error() {
         <Alert status='error' position='absolute' bottom='150px' right='15px' fontSize='13.5px' width='max-content'>
           <AlertIcon />
           {errorMessage}
+        </Alert>
+      )}
+      {successMessage && (
+        <Alert status='success' position='absolute' bottom='150px' right='15px' fontSize='13.5px' width='max-content'>
+          <AlertIcon />
+          {successMessage}
         </Alert>
       )}
       <StarTrailFooter />
