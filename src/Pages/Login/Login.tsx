@@ -50,7 +50,7 @@ function Login({ setReloadToken }: { setReloadToken: Dispatch<SetStateAction<boo
         </TabList>
         <TabPanels>
           <TabPanel>
-            <LoginForm />
+            <LoginForm setReloadToken={setReloadToken} />
           </TabPanel>
           <TabPanel>
             <SignUpForm setReloadToken={setReloadToken} />
