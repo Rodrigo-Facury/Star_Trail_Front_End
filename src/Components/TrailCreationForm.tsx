@@ -208,7 +208,7 @@ function TrailCreationForm({ trailId }: TrailCreationFormProps) {
             )}
           </Droppable>
         </DragDropContext>
-        <Container margin='15px 0px' padding='0px'>
+        <Container margin='15px 0px 0px 0px' padding='0px'>
           <Button mt={4} colorScheme='purple' onClick={handleAddStep}>
             Adicionar Passo
           </Button>

@@ -8,6 +8,7 @@ export type User = {
   level: number
   peopleIFollow?: number[]
   exp?: number
+  validated?: boolean
 }
 
 export type Step = {

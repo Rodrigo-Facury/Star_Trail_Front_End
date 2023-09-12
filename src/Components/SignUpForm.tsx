@@ -1,6 +1,6 @@
 import { Button, FormControl, Input, FormErrorMessage, Alert, AlertIcon, UnorderedList, ListItem, Text } from '@chakra-ui/react'
 import PasswordInput from './PasswordInput'
-import { useState } from 'react'
+import { Dispatch, SetStateAction, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import secureLocalStorage from 'react-secure-storage'
 
@@ -31,7 +31,7 @@ interface IErrors {
   }
 }
 
-function SignUpForm() {
+function SignUpForm({ setReloadToken }: { setReloadToken: Dispatch<SetStateAction<boolean>> }) {
   const [userInfo, setUserInfo] = useState<UserInfo>({
     email: '',
     password: '',
@@ -186,6 +186,7 @@ function SignUpForm() {
       })
       .then((data: { token: string }) => {
         secureLocalStorage.setItem('st_token', data.token)
+        setReloadToken(true)
         navigate('/')
       })
       .catch((err) => {
