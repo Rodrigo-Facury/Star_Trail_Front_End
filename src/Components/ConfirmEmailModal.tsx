@@ -5,6 +5,7 @@ import secureLocalStorage from 'react-secure-storage'
 function ConfirmEmailModal() {
   const [email, setEmail] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
+  const [successMessage, setSuccessMessage] = useState('')
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const token: string | number | boolean | object | null = secureLocalStorage.getItem('st_token')
@@ -13,6 +14,12 @@ function ConfirmEmailModal() {
     fetch(`${typeof import.meta.env.VITE_API_BASE_URL === 'string' ? import.meta.env.VITE_API_BASE_URL : ''}/resend-validation-email/${email}`)
       .then((res) => {
         if (res.ok) {
+          setSuccessMessage('E-mail reenviado com sucesso!')
+
+          setTimeout(() => {
+            setSuccessMessage('')
+          }, 3000)
+
           return res.json()
         } else {
           setErrorMessage('Erro ao reenviar e-mail de confirmação')
@@ -110,6 +117,13 @@ function ConfirmEmailModal() {
           <Alert status='error' position='absolute' bottom='150px' right='15px' fontSize='13.5px' width='max-content'>
             <AlertIcon />
             {errorMessage}
+          </Alert>
+        )}
+
+        {successMessage && (
+          <Alert status='success' position='absolute' bottom='150px' right='15px' fontSize='13.5px' width='max-content'>
+            <AlertIcon />
+            {successMessage}
           </Alert>
         )}
       </Flex>
