@@ -186,7 +186,7 @@ function SignUpForm({ setReloadToken }: { setReloadToken: Dispatch<SetStateActio
       })
       .then((data: { token: string }) => {
         secureLocalStorage.setItem('st_token', data.token)
-        setReloadToken(true)
+        setReloadToken((prev) => !prev)
         navigate('/')
       })
       .catch((err) => {

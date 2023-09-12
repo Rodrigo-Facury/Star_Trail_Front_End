@@ -10,7 +10,7 @@ import {
   Text,
   UnorderedList
 } from '@chakra-ui/react'
-import { useState } from 'react'
+import { Dispatch, SetStateAction, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import PasswordInput from './PasswordInput'
 import secureLocalStorage from 'react-secure-storage'
@@ -29,7 +29,7 @@ interface IErrors {
   }
 }
 
-function LoginForm() {
+function LoginForm({ setReloadToken }: { setReloadToken: Dispatch<SetStateAction<boolean>> }) {
   const navigate = useNavigate()
   const [loginInfo, setLoginInfo] = useState<LoginInfo>({
     emailOrUsername: '',
@@ -96,6 +96,7 @@ function LoginForm() {
       })
       .then((data: { token: string, peopleIFollow: number[] }) => {
         secureLocalStorage.setItem('st_token', data.token)
+        setReloadToken((prev) => !prev)
         navigate('/')
       })
       .catch((err) => {
