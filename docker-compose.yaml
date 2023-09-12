@@ -27,6 +27,9 @@ services:
         - HOSTNAME=${HOSTNAME}
         - DATABASE_PORT=${DATABASE_PORT}
         - SECRET=${SECRET}
+        - API_BASE_URL=${API_BASE_URL}
+        - APP_BASE_URL=${APP_BASE_URL}
+        - EMAIL_PASSWORD=${EMAIL_PASSWORD}
       context: ../back
       dockerfile: Dockerfile
     restart: on-failure
@@ -41,6 +44,9 @@ services:
       - HOSTNAME=${HOSTNAME}
       - DATABASE_PORT=${DATABASE_PORT}
       - SECRET=${SECRET}
+      - API_BASE_URL=${API_BASE_URL}
+      - APP_BASE_URL=${APP_BASE_URL}
+      - EMAIL_PASSWORD=${EMAIL_PASSWORD}
     volumes:
       - ../back/public/uploads:/usr/src/app/public/uploads
       - ../front/certbot/www:/var/www/certbot/:ro
