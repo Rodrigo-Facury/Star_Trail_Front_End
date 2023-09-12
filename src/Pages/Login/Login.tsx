@@ -3,8 +3,9 @@ import logo from "../../assets/logo.png"
 import LoginForm from "../../Components/LoginForm"
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react"
 import SignUpForm from "../../Components/SignUpForm"
+import { Dispatch, SetStateAction } from "react"
 
-function Login() {
+function Login({ setReloadToken }: { setReloadToken: Dispatch<SetStateAction<boolean>> }) {
   return (
     <main id="login-page">
       <h1 id="title">Star Trail</h1>
@@ -52,7 +53,7 @@ function Login() {
             <LoginForm />
           </TabPanel>
           <TabPanel>
-            <SignUpForm />
+            <SignUpForm setReloadToken={setReloadToken} />
           </TabPanel>
         </TabPanels>
       </Tabs>

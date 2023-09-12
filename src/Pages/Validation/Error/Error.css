@@ -1,0 +1,15 @@
+#error-validation-page {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  justify-content: space-between;
+  background-color: #1E1E1E;
+  overflow: hidden;
+}
+
+#font-logo-validation {
+  color: #ffffff;
+  font-size: 24px;
+  font-family: 'Alfa Slab One', cursive;
+  cursor: pointer;
+}

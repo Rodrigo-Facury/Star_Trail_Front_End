@@ -41,7 +41,7 @@ function StarTrailFooter() {
       </div>
       <span className='by'>
         por{' '}
-        <Button className='my-name' as='span' variant='link' colorScheme='whatsapp' onClick={openDialog} cursor='pointer'>
+        <Button className='my-name' as='span' variant='link' colorScheme='whatsapp' onClick={openDialog} cursor='pointer' zIndex='1'>
           @rodrigo_facury
         </Button>
       </span>
