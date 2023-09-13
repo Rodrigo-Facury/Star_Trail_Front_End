@@ -61,7 +61,7 @@ function Notifications() {
       <StarTrailHeader />
       <Flex id='notifications-container' direction='column' alignSelf='center' flexGrow='1' width='60vw' marginTop='20px'>
         {
-          notifications?.slice(0, 4).map(({ id, message, createdAt, seen, goto }) => (
+          notifications?.map(({ id, message, createdAt, seen, goto }) => (
             <Flex
               key={id}
               direction='column'
