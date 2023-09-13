@@ -53,7 +53,7 @@ function SignUpForm({ setReloadToken }: { setReloadToken: Dispatch<SetStateActio
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
 
-    if (name === 'username') {
+    if (name === 'username' || name === 'email') {
       setErrors({})
 
       return setUserInfo((prevInfo) => ({
