@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 import {
+  Alert,
+  AlertIcon,
   Box,
   Button,
   Container,
@@ -36,10 +38,11 @@ type TrailCreationFormProps = {
 
 function TrailCreationForm({ trailId }: TrailCreationFormProps) {
   const [title, setTitle] = useState<string>('')
-  const [steps, setSteps] = useState<Step[]>([{ id: 'step-0', description: ''}])
+  const [steps, setSteps] = useState<Step[]>([{ id: 'step-0', description: '' }])
   const token: string | number | boolean | object | null = secureLocalStorage.getItem('st_token')
   const [selectedTopics, setSelectedTopics] = useState<string[]>([])
   const [topics, setTopics] = useState<Topic[]>([])
+  const [errorMessage, setErrorMessage] = useState('')
   const navigate = useNavigate()
 
   const generateId = () => `step-${steps.length}`
@@ -49,6 +52,16 @@ function TrailCreationForm({ trailId }: TrailCreationFormProps) {
       title,
       steps: steps.map((step, index) => ({ description: step.description, position: index + 1 })),
       topics: selectedTopics
+    }
+
+    if (!title || steps.some((step) => !step.description) || selectedTopics.length < 1) {
+      setErrorMessage('Todos os campos devem ser preenchidos')
+
+      setTimeout(() => {
+        setErrorMessage('')
+      }, 2000)
+
+      return
     }
 
     if (typeof token !== 'string') {
@@ -65,10 +78,13 @@ function TrailCreationForm({ trailId }: TrailCreationFormProps) {
     })
       .then((res) => {
         if (res.ok) {
-          console.log('Trilha criada com sucesso!')
           navigate('/')
         } else {
-          console.log('Erro ao criar trilha')
+          setErrorMessage('Erro ao criar trilha')
+
+          setTimeout(() => {
+            setErrorMessage('')
+          }, 2000)
         }
       })
       .catch((err) => console.error(err))
@@ -143,21 +159,22 @@ function TrailCreationForm({ trailId }: TrailCreationFormProps) {
   }, [])
 
   useEffect(() => {
-    fetch(`${typeof import.meta.env.VITE_API_BASE_URL === 'string' ? import.meta.env.VITE_API_BASE_URL : ''}/trail/${trailId ? trailId : ''}`)
-      .then((res) => res.json())
-      .then(({ trail }: { trail: Trail }) => {
-        setTitle(trail.title)
-        setSteps(trail.steps.sort((a, b) => a.position - b.position).map(({ description, id }, i) => ({ id: `step-${i}`, description, stepId: id })))
-        setSelectedTopics(trail.Topics.map(({ name }) => name))
-      })
-      .catch((err) => console.error(err))
+    if (trailId) {
+      fetch(`${typeof import.meta.env.VITE_API_BASE_URL === 'string' ? import.meta.env.VITE_API_BASE_URL : ''}/trail/${trailId ? trailId : ''}`)
+        .then((res) => res.json())
+        .then(({ trail }: { trail: Trail }) => {
+          setTitle(trail.title)
+          setSteps(trail.steps.sort((a, b) => a.position - b.position).map(({ description, id }, i) => ({ id: `step-${i}`, description, stepId: id })))
+          setSelectedTopics(trail.Topics.map(({ name }) => name))
+        })
+        .catch((err) => console.error(err))
+    }
   }, [trailId])
 
   return (
     <Container id='trail-creation-form-container' maxWidth='55%'>
       <Box mt={6}>
         <FormControl mb={4}>
-          <FormLabel>Title</FormLabel>
           <Input
             placeholder='Adicione um título à trilha'
             value={title}
@@ -227,6 +244,12 @@ function TrailCreationForm({ trailId }: TrailCreationFormProps) {
           }
         </Flex>
       </Box>
+      {errorMessage && (
+        <Alert status='error' position='absolute' bottom='150px' right='15px' fontSize='13.5px' width='max-content'>
+          <AlertIcon />
+          {errorMessage}
+        </Alert>
+      )}
     </Container>
   )
 }
