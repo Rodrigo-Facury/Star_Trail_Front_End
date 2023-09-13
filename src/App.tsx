@@ -15,6 +15,7 @@ import jwtDecode from 'jwt-decode'
 import ConfirmEmailModal from './Components/ConfirmEmailModal'
 import ReactDOM from 'react-dom';
 import { ChakraProvider } from '@chakra-ui/react'
+import PrivacyPolicy from './Pages/PrivacyPolicy/PrivacyPolicy'
 
 function App() {
   const [reloadToken, setReloadToken] = useState(false)
@@ -53,6 +54,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path='/privacy-policy' element={<PrivacyPolicy />} />
         <Route path='/login' element={<Login setReloadToken={setReloadToken} />} />
         <Route path='/validation-success' element={<Success />} />
         <Route path='/validation-error' element={<Error />} />

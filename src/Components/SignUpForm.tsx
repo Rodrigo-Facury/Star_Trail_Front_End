@@ -169,7 +169,6 @@ function SignUpForm({ setReloadToken }: { setReloadToken: Dispatch<SetStateActio
       return
     }
 
-
     if (userInfo.password !== userInfo.confirmPassword) {
       setPasswordsMatch(false)
       return
@@ -425,7 +424,7 @@ function SignUpForm({ setReloadToken }: { setReloadToken: Dispatch<SetStateActio
 
             <Text fontSize="lg" fontWeight="bold" mt="4">4. Privacidade</Text>
             <Text fontSize="md">
-              <strong>4.1.</strong> Coletamos e usamos informações de acordo com nossa Política de Privacidade. Ao usar a Star Trail, você concorda com a coleta e uso de suas informações, conforme descrito na política de privacidade.
+              <strong>4.1.</strong> Coletamos e usamos informações de acordo com nossa <Link onClick={() => navigate('/privacy-policy')} color='whatsapp.700'>Política de Privacidade</Link>. Ao usar a Star Trail, você concorda com a coleta e uso de suas informações, conforme descrito na política de privacidade.
             </Text>
 
             <Text fontSize="lg" fontWeight="bold" mt="4">5. Encerramento da Conta</Text>
