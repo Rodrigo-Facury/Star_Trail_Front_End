@@ -44,3 +44,19 @@ export type FeedResponse = {
   totalPages: number
   message: string
 }
+
+export type RankingResponse = {
+  trails: RankingData[]
+  nextPage: number
+  totalPages: number
+  message: string
+}
+
+export type RankingData = {
+  id: number
+  position: number
+  username: string
+  profilePicturePath: string
+  title: string
+  stars: number
+}
