@@ -168,7 +168,7 @@ function TrailCard({ title, topics, creator, trails, stars, steps, peopleWhoStar
             mr={2}
           />
           <Text>
-            {creator.username} {statusIcons[creator?.level]}
+            {creator.username} {statusIcons[creator?.level]} { creator.isWinner && <Text display='inline' color='whatsapp.400'>$$</Text> }
           </Text>
         </Flex>
         {user && user.id === creator.id && (

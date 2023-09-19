@@ -66,7 +66,7 @@ function Error() {
             backgroundColor='blackAlpha.300'
             marginTop='20px'
             placeholder='E-mail'
-            type='e-mail'
+            type='email'
             onChange={(e) => setEmail(e.target.value)}
             onKeyUp={({ key }) => {
               if (key === 'Enter') {

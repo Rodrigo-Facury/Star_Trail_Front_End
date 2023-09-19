@@ -1,6 +1,7 @@
 export type User = {
   id: number
   username: string
+  email?: string
   firstName: string
   lastName: string
   profilePicturePath: string
@@ -9,6 +10,7 @@ export type User = {
   peopleIFollow?: number[]
   exp?: number
   validated?: boolean
+  isWinner?: boolean
 }
 
 export type Step = {
