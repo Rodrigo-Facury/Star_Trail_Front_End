@@ -1,4 +1,4 @@
-import { Alert, AlertIcon, Button, Flex, Input, Text } from '@chakra-ui/react'
+import { Alert, AlertIcon, Button, Flex, Text } from '@chakra-ui/react'
 import jwtDecode from 'jwt-decode'
 import { useState } from 'react'
 import secureLocalStorage from 'react-secure-storage'
@@ -17,7 +17,7 @@ function ConfirmEmailModal() {
     if (typeof token === 'string') {
       const tokenUser: User = jwtDecode(token)
 
-      email = tokenUser.email
+      email = tokenUser.email || ''
     }
 
     fetch(`${typeof import.meta.env.VITE_API_BASE_URL === 'string' ? import.meta.env.VITE_API_BASE_URL : ''}/resend-validation-email/${email}`)
