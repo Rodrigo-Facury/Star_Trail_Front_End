@@ -1,9 +1,10 @@
 import { Alert, AlertIcon, Button, Flex, Input, Text } from '@chakra-ui/react'
+import jwtDecode from 'jwt-decode'
 import { useState } from 'react'
 import secureLocalStorage from 'react-secure-storage'
+import { User } from '../../types'
 
 function ConfirmEmailModal() {
-  const [email, setEmail] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
   const [successMessage, setSuccessMessage] = useState('')
 
@@ -11,6 +12,14 @@ function ConfirmEmailModal() {
   const token: string | number | boolean | object | null = secureLocalStorage.getItem('st_token')
 
   function handleSubmit() {
+    let email = ''
+
+    if (typeof token === 'string') {
+      const tokenUser: User = jwtDecode(token)
+
+      email = tokenUser.email
+    }
+
     fetch(`${typeof import.meta.env.VITE_API_BASE_URL === 'string' ? import.meta.env.VITE_API_BASE_URL : ''}/resend-validation-email/${email}`)
       .then((res) => {
         if (res.ok) {
@@ -84,18 +93,6 @@ function ConfirmEmailModal() {
         <Text fontSize='xl' mt='4'>
           Caso não tenha recebido, tente reenviar o e-mail de confirmação.
         </Text>
-        <Input
-          backgroundColor='blackAlpha.300'
-          marginTop='20px'
-          placeholder='E-mail'
-          type='e-mail'
-          onChange={(e) => setEmail(e.target.value)}
-          onKeyUp={({ key }) => {
-            if (key === 'Enter') {
-              handleSubmit()
-            }
-          }}
-        />
         <Flex alignSelf='center'>
           <Button
             mt='6'

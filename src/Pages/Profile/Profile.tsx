@@ -225,7 +225,7 @@ function Profile() {
                   :
                   <Heading fontSize='3xl' marginTop='8px'>{user.firstName} {user.lastName}</Heading>
               }
-              <Text fontSize='20px'>{user.username} <span>{statusIcons[user.level]}</span></Text>
+              <Text fontSize='20px'>{user.username} <span>{statusIcons[user.level]}</span> { user.isWinner && <Text display='inline' color='whatsapp.400'>$$</Text> }</Text>
               {
                 user.username === me?.username
                   ?
