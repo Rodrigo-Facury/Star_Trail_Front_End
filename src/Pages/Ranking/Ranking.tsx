@@ -5,6 +5,7 @@ import './Ranking.css'
 import StarTrailHeader from '../../Components/StarTrailHeader'
 import { useNavigate } from 'react-router-dom'
 import StarTrailFooter from '../../Components/StarTrailFooter'
+import CountdownClock from '../../Components/CountdownClock'
 
 function Ranking() {
   const [rankingData, setRankingData] = useState<RankingData[] | []>([])
@@ -69,6 +70,7 @@ function Ranking() {
           {explanationText}
           <Text display='inline'> Confira o regulamento <Link display='inline' color='whatsapp.400' onClick={openModal}> clicando aqui.</Link></Text>
         </Text>
+        <CountdownClock />
         <Table variant='striped' color='white' width='800px' maxWidth='85vw' colorScheme='whiteAlpha' alignSelf='center' marginTop='20px'>
           <Thead>
             <Tr>
