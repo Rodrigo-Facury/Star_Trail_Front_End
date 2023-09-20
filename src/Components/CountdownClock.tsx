@@ -25,17 +25,17 @@ function CountdownClock() {
 
     if (difference <= 0) {
       return {
-        days: 0,
-        hours: 0,
-        minutes: 0,
-        seconds: 0,
+        days: '00',
+        hours: '00',
+        minutes: '00',
+        seconds: '00',
       }
     }
 
-    const days = Math.floor(difference / (1000 * 60 * 60 * 24))
-    const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
-    const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60))
-    const seconds = Math.floor((difference % (1000 * 60)) / 1000)
+    const days = String(Math.floor(difference / (1000 * 60 * 60 * 24))).padStart(2, '0')
+    const hours = String(Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))).padStart(2, '0')
+    const minutes = String(Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, '0')
+    const seconds = String(Math.floor((difference % (1000 * 60)) / 1000)).padStart(2, '0')
 
     return {
       days,
