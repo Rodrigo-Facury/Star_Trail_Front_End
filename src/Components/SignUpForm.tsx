@@ -1,4 +1,4 @@
-import { Button, FormControl, Input, FormErrorMessage, Alert, AlertIcon, UnorderedList, ListItem, Text, Checkbox, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, Link, Flex } from '@chakra-ui/react'
+import { Spinner, Button, FormControl, Input, FormErrorMessage, Alert, AlertIcon, UnorderedList, ListItem, Text, Checkbox, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, Link, Flex } from '@chakra-ui/react'
 import PasswordInput from './PasswordInput'
 import { Dispatch, SetStateAction, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -47,6 +47,7 @@ function SignUpForm({ setReloadToken }: { setReloadToken: Dispatch<SetStateActio
   const [agreedToTerms, setAgreedToTerms] = useState<boolean>(false)
   const navigate = useNavigate()
   const [isOpen, setIsOpen] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
   const onClose = () => setIsOpen(false)
   const openModal = () => setIsOpen(true)
@@ -178,6 +179,8 @@ function SignUpForm({ setReloadToken }: { setReloadToken: Dispatch<SetStateActio
 
     delete infoToSend.confirmPassword
 
+    setIsLoading(true)
+
     fetch(`${typeof import.meta.env.VITE_API_BASE_URL === 'string' ? import.meta.env.VITE_API_BASE_URL : ''}/user`, {
       method: 'POST',
       headers: {
@@ -205,6 +208,9 @@ function SignUpForm({ setReloadToken }: { setReloadToken: Dispatch<SetStateActio
       })
       .catch((err) => {
         console.log(err)
+      })
+      .finally(() => {
+        setIsLoading(false)
       })
   }
 
@@ -377,8 +383,16 @@ function SignUpForm({ setReloadToken }: { setReloadToken: Dispatch<SetStateActio
           fontFamily: 'Abhaya Libre, serif',
           marginTop: '25px',
         }}
+        isDisabled={isLoading}
       >
-        Cadastrar
+         {isLoading ? (
+          <Flex alignItems="center">
+            <Spinner size="sm" marginRight="2" />
+            Cadastrando...
+          </Flex>
+        ) : (
+          'Cadastrar'
+        )}
       </Button>
       {errorMessage && (
         <Alert status='error' position='absolute' bottom='0px' fontSize='13.5px' width='max-content' maxWidth='100%'>
