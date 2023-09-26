@@ -387,8 +387,7 @@ function StarTrailHeader() {
                     <Image src={user?.profilePicturePath} alt='Avatar do Usuário' />
                   </div>
                   <Flex alignItems='center'>
-                    <Text id='username' marginRight='5px'>{user?.username}</Text>
-                    {statusIcons[user?.level]}
+                    <Text id='username' marginRight='5px'>{user?.username} {statusIcons[user?.level]}</Text>
                   </Flex>
                 </div>
               </MenuButton>
