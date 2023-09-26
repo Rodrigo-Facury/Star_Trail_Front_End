@@ -394,6 +394,7 @@ function StarTrailHeader() {
               <MenuList>
                 <MenuItem onClick={() => navigate(`/profile/${user.username}`)}>Meu Perfil</MenuItem>
                 <MenuItem onClick={() => navigate('/ranking')}>Ver Ranking</MenuItem>
+                <MenuItem onClick={() => navigate(`/profile/${user.username}#conquests`)}>Minhas Conquistas</MenuItem>
                 <MenuItem onClick={handleLogout}>Logout</MenuItem>
               </MenuList>
             </Menu>
