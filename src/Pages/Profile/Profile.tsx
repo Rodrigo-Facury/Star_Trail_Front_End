@@ -9,6 +9,7 @@ import secureLocalStorage from 'react-secure-storage'
 import jwtDecode from 'jwt-decode'
 import { EditIcon } from '@chakra-ui/icons'
 import { statusIcons } from '../../helpers/statusIcons'
+import LevelCarousel from '../../Components/LevelCarousel'
 
 function Profile() {
   const [user, setUser] = useState<User | undefined>()
@@ -179,7 +180,7 @@ function Profile() {
       {
         user
         &&
-        <Flex flexGrow='1' id='profile-container'>
+        <Flex flexGrow='1' id='profile-container' marginTop='35px'>
           <Flex alignItems='center' flexDirection='column' margin='auto' id='user-info'>
             {
               isEditing
@@ -225,7 +226,7 @@ function Profile() {
                   :
                   <Heading fontSize='3xl' marginTop='8px'>{user.firstName} {user.lastName}</Heading>
               }
-              <Text fontSize='20px'>{user.username} <span>{statusIcons[user.level]}</span> { user.isWinner && <Text display='inline' color='whatsapp.400'>$$</Text> }</Text>
+              <Text fontSize='20px'>{user.username} <span>{statusIcons[user.level]}</span> {user.isWinner && <Text display='inline' color='whatsapp.400'>$$</Text>}</Text>
               {
                 user.username === me?.username
                   ?
@@ -301,6 +302,8 @@ function Profile() {
           </Flex>
         </Flex>
       }
+      <Heading color='white' marginTop='60px' alignSelf='center'>Conquistas</Heading>
+      <LevelCarousel userLevel={user?.level} />
       <StarTrailFooter />
     </main>
   )
