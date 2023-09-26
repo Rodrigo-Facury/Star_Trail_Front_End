@@ -63,6 +63,22 @@ function Profile() {
     }
   }, [username])
 
+  useEffect(() => {
+    setTimeout(() => {
+      const { hash } = window.location
+
+      if (hash.startsWith('#')) {
+        const sectionId = hash.slice(1)
+
+        const element = document.getElementById(sectionId)
+
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' })
+        }
+      }
+    }, 200)
+  }, [])
+
   const handleEditToggle = () => {
     setIsEditing(!isEditing)
   }

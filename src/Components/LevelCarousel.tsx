@@ -39,7 +39,7 @@ function LevelCarousel({ userLevel }: { userLevel?: number }) {
   }
 
   return (
-    <Box margin='35px 0px' width='80vw' alignSelf='center'>
+    <Box id='conquests' margin='35px 0px' width='80vw' alignSelf='center'>
       <Slider {...settings}>
         {data.map((item) => (
           <Flex key={item.id}>
