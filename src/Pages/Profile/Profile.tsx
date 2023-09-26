@@ -76,7 +76,7 @@ function Profile() {
           element.scrollIntoView({ behavior: 'smooth' })
         }
       }
-    }, 200)
+    }, 800)
   }, [])
 
   const handleEditToggle = () => {
