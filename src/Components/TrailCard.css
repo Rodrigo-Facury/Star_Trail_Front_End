@@ -10,3 +10,8 @@
   background-color: rgba(0, 128, 128, 0.28);
   border: solid 1px teal;
 }
+
+.step-description a {
+  color: #007bff;
+  text-decoration: underline;
+}
