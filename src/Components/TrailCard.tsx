@@ -1,4 +1,4 @@
-import { Badge, Box, Button, Collapse, Flex, Heading, IconButton, Image, Menu, MenuButton, MenuItem, MenuList, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text } from '@chakra-ui/react'
+import { Badge, Box, Button, Collapse, Container, Flex, Heading, IconButton, Image, Menu, MenuButton, MenuItem, MenuList, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text } from '@chakra-ui/react'
 import { Step, Trail, User } from '../../types'
 import { statusIcons } from '../helpers/statusIcons'
 import star from '../assets/star.png'
@@ -8,6 +8,7 @@ import { ArrowDownIcon, EditIcon } from '@chakra-ui/icons'
 import secureLocalStorage from 'react-secure-storage'
 import jwtDecode from 'jwt-decode'
 import { useNavigate } from 'react-router-dom'
+import Linkify from 'react-linkify'
 
 type TrailCardProps = {
   title: string
@@ -168,7 +169,7 @@ function TrailCard({ title, topics, creator, trails, stars, steps, peopleWhoStar
             mr={2}
           />
           <Text>
-            {creator.username} {statusIcons[creator?.level]} { creator.isWinner && <Text display='inline' color='whatsapp.400'>$$</Text> }
+            {creator.username} {statusIcons[creator?.level]} {creator.isWinner && <Text display='inline' color='whatsapp.400'>$$</Text>}
           </Text>
         </Flex>
         {user && user.id === creator.id && (
@@ -261,13 +262,15 @@ function TrailCard({ title, topics, creator, trails, stars, steps, peopleWhoStar
         </Text>
       </Flex>
       <Collapse in={expanded} animateOpacity>
-        {steps.map((step) => (
-          <Box key={step.id} mt={2} ml={4}>
-            <Text fontSize='14px' color='white'>
-              {step.description}
-            </Text>
-          </Box>
-        ))}
+        <Container margin='0px' minWidth='100% !important'>
+          {steps.map((step, i) => (
+            <Box key={step.id} mt={4} padding='5px' backgroundColor={i % 2 === 0 ? 'transparent' : 'whiteAlpha.100'}>
+              <Text className='step-description' fontSize='15px' color='white'>
+                <Linkify>{step.description}</Linkify>
+              </Text>
+            </Box>
+          ))}
+        </Container>
       </Collapse>
     </Box>
   )
