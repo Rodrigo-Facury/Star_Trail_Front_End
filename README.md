@@ -6,4 +6,4 @@ Unfortunatelly, it ran out of funds to be on-line.
 
 Good news is you can still test it locally, as it is open-source now!
 
-P.S.: Don't forget to check out the Back-End also, to get the full project! :D
+P.S.: Don't forget to check out the [Back-End](https://github.com/Rodrigo-Facury/Star_Trail_Back_End) also, to get the full project! :D
